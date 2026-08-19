@@ -5,11 +5,25 @@ const mongoConnect = require("./src/config/db");
 
 const app = express();
 
+// Middleware
+app.use(express.json());
+
+// Routes import
+const userRoutes = require("./src/routes/userRoute");
+
+// test Router
+app.get("/", (req, res) =>{
+  res.send("Server running");
+});
+
+// routes connect
+app.use("/api/users", userRoutes);
+
 const PORT = 5003 || process.env.PORT;
 
 mongoConnect().then(() =>{
   app.listen(PORT, () =>{
-    console.log("Server running on port" + PORT);
+    console.log("Server running on port " + PORT);
   });
 }).catch(err =>{
   console.error("Database connection failed", err);
