@@ -9,6 +9,7 @@ const app = express();
 app.use(express.json());
 
 // Routes import
+const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");
 
 // test Router
@@ -17,6 +18,7 @@ app.get("/", (req, res) =>{
 });
 
 // routes connect
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 const PORT = 5003 || process.env.PORT;
