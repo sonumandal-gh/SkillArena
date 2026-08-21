@@ -11,6 +11,7 @@ app.use(express.json());
 // Routes import
 const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");
+const challengesRoutes = require("./src/routes/challengeRoutes");
 
 // test Router
 app.get("/", (req, res) =>{
@@ -20,6 +21,7 @@ app.get("/", (req, res) =>{
 // routes connect
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/challenges", challengesRoutes);
 
 const PORT = 5003 || process.env.PORT;
 

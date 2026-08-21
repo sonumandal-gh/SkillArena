@@ -114,9 +114,23 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-// Get All Users
+// Get All Users + Search Users
 exports.getAllUsers = async (req, res) => {
   try {
+    const { search } = req.query;
+
+    let query = {};
+
+    // search by name or email
+    if(search){
+      query = {
+        $or: [
+          {name: {$regex: search, $options: "i"}},
+          {email: {$regex: search, $options: "i"}}
+        ]
+      };
+    }
+    
     const users = await User.find().select("-password");
 
     return res.status(200).json({
@@ -156,6 +170,48 @@ exports.deleteUser = async (req, res) => {
 
     return res.status(200).json({
       message: "User deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
+// Change User Role
+exports.updateUserRole = async (req, res) =>{
+  try{
+    const {role, userId} = req.body;
+
+     // Validate role
+    if (!role || !["user", "admin"].includes(role)) {
+      return res.status(400).json({
+        message: "Role must be either user or admin",
+      });
+    }
+
+    // Find User
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // Update role
+    user.role = role;
+    await user.save();
+
+    return res.status(200).json({
+      message: "User role updated successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
     return res.status(500).json({
