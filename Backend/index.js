@@ -12,6 +12,7 @@ app.use(express.json());
 const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");
 const challengesRoutes = require("./src/routes/challengeRoutes");
+const submissionRouter = require("./src/routes/submissionRoute");
 
 // test Router
 app.get("/", (req, res) =>{
@@ -22,8 +23,9 @@ app.get("/", (req, res) =>{
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/challenges", challengesRoutes);
+app.use("/api/submissions", submissionRouter);
 
-const PORT = 5003 || process.env.PORT;
+const PORT = process.env.PORT || 5003;
 
 mongoConnect().then(() =>{
   app.listen(PORT, () =>{
