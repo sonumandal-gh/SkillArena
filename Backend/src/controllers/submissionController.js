@@ -92,3 +92,58 @@ exports.submitAnswer = async (req, res) => {
         });
     }
 };
+
+// Get My Submissions
+exports.getMySubmission = async (req, res) => {
+  try {
+    const submissions = await Submission.find({
+      user: req.user.userId,
+    })
+      .populate(
+        "challenge",
+        "title category difficulty points"
+      )
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      message: "Submissions fetched successfully",
+      submissions: submissions,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
+// Submission By Id
+exports.getSubmissionById = async (req, res) => {
+    try{
+        const submission = await Submission.findOne({
+            _id: req.params.id,
+            user: req.user.userId,
+        })
+        .populate("challenge", "title category difficulty points");
+
+        if (!submission) {
+      return res.status(404).json({
+        message: "Submission not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Submission fetched successfully",
+      submission,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};

@@ -12,7 +12,8 @@ app.use(express.json());
 const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");
 const challengesRoutes = require("./src/routes/challengeRoutes");
-const submissionRouter = require("./src/routes/submissionRoute");
+const submissionRoutes = require("./src/routes/submissionRoute");
+const leaderboardRoutes = require("./src/routes/leaderboardRoute");
 
 // test Router
 app.get("/", (req, res) =>{
@@ -23,7 +24,8 @@ app.get("/", (req, res) =>{
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/challenges", challengesRoutes);
-app.use("/api/submissions", submissionRouter);
+app.use("/api/submissions", submissionRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
 
 const PORT = process.env.PORT || 5003;
 
