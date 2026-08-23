@@ -14,6 +14,7 @@ const userRoutes = require("./src/routes/userRoute");
 const challengesRoutes = require("./src/routes/challengeRoutes");
 const submissionRoutes = require("./src/routes/submissionRoute");
 const leaderboardRoutes = require("./src/routes/leaderboardRoute");
+const statisticsRoutes = require("./src/routes/statisticsRoute");
 
 // test Router
 app.get("/", (req, res) =>{
@@ -26,6 +27,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/challenges", challengesRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
+app.use("/api/statistics",statisticsRoutes);
 
 const PORT = process.env.PORT || 5003;
 
