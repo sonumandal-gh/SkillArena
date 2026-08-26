@@ -182,7 +182,8 @@ exports.deleteUser = async (req, res) => {
 // Change User Role
 exports.updateUserRole = async (req, res) =>{
   try{
-    const {role, userId} = req.body;
+    const { role } = req.body;
+    const userId = req.params.userId || req.body.userId;
 
      // Validate role
     if (!role || !["user", "admin"].includes(role)) {

@@ -14,9 +14,20 @@ const submissionSchema = new mongoose.Schema(
             required: true,
         },
 
+        type: {
+            type: String,
+            enum: ["mcq", "coding"],
+            required: true,
+        },
+
         answer: {
             type: String,
             required: true,
+        },
+
+        code: {
+            type: String,
+            default: null,
         },
 
         isCorrect: {
@@ -28,6 +39,17 @@ const submissionSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+
+        status: {
+            type: String,
+            enum: [
+                "accepted",
+                "wrong",
+                "error",
+                "pending",
+        ],
+      required: true,
+    },
     },
     {
         timestamps: true,

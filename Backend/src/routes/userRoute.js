@@ -20,7 +20,7 @@ router.get("/:userId",authMiddleware, adminMiddleware, getUserById);
 
 router.get("/users", authMiddleware, adminMiddleware, getAllUsers);
 
-router.put("/:userId/role", authMiddleware, adminMiddleware, updateProfile);
+router.put("/:userId/role", authMiddleware, adminMiddleware, updateUserRole);
 
 router.delete(
   "/users/:userId",

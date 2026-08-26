@@ -1,40 +1,78 @@
 const Challenge = require("../models/challengeModel");
 
 exports.createChallenge = async (req, res) => {
-  try {
+  try{
     const {
       title,
       description,
+      type,
       category,
       difficulty,
       options,
       correctAnswer,
+      starterCode,
+      functionName,
+      testCases,
       points,
     } = req.body;
 
-    // Check required fields
+    // Common fields
     if (
       !title ||
       !description ||
+      !type ||
       !category ||
       !difficulty ||
-      !options ||
-      !correctAnswer ||
       !points
-    ) {
+    )  {
       return res.status(400).json({
         message: "All fields are required",
       });
+    }
+
+    // Check challenge type
+    if (!["mcq", "coding"].includes(type)) {
+      return res.status(400).json({
+        message: "Type must be mcq or coding",
+      });
+    }
+
+    // MCQ validation
+    if (type === "mcq") {
+      if (!options || options.length < 2 || !correctAnswer) {
+        return res.status(400).json({
+          message: "MCQ requires options and correctAnswer",
+        });
+      }
+    }
+
+    // Coding validation
+    if (type === "coding") {
+      if (
+        !starterCode ||
+        !functionName ||
+        !testCases ||
+        testCases.length === 0
+      ) {
+        return res.status(400).json({
+          message:
+            "Coding challenge requires starterCode, functionName and testCases",
+        });
+      }
     }
 
     // Create challenge
     const challenge = await Challenge.create({
       title,
       description,
+      type,
       category,
       difficulty,
-      options,
-      correctAnswer,
+      options: type === "mcq" ? options : [],
+      correctAnswer: type === "mcq" ? correctAnswer : null,
+      starterCode: type === "coding" ? starterCode : null,
+      functionName: type === "coding" ? functionName : null,
+      testCases: type === "coding" ? testCases : [],
       points,
       createdBy: req.user.userId,
     });

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const challengeSchema = new mongoose.Schema({
+const challengeSchema = new mongoose.Schema(
+  {
     title: {
       type: String,
       required: true,
@@ -11,6 +12,12 @@ const challengeSchema = new mongoose.Schema({
       type: String,
       required: true,
       trim: true,
+    },
+
+    type: {
+      type: String,
+      enum: ["mcq", "coding"],
+      required: true,
     },
 
     category: {
@@ -25,20 +32,48 @@ const challengeSchema = new mongoose.Schema({
       required: true,
     },
 
+    // MCQ
     options: {
       type: [String],
-      required: true,
+      default: [],
     },
 
     correctAnswer: {
       type: String,
-      required: true,
+      default: null,
+    },
+
+    // Coding
+    starterCode: {
+      type: String,
+      default: null,
+    },
+
+    functionName: {
+      type: String,
+      default: null,
+    },
+
+    testCases: {
+      type: [
+        {
+          input: {
+            type: mongoose.Schema.Types.Mixed,
+            required: true,
+          },
+
+          expectedOutput: {
+            type: mongoose.Schema.Types.Mixed,
+            required: true,
+          },
+        },
+      ],
+      default: [],
     },
 
     points: {
       type: Number,
       required: true,
-      default: 10,
     },
 
     createdBy: {
@@ -46,8 +81,8 @@ const challengeSchema = new mongoose.Schema({
       ref: "User",
       required: true,
     },
-},
- { timestamps: true }
+  },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Challenge", challengeSchema);
