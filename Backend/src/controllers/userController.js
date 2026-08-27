@@ -10,7 +10,7 @@ exports.updateProfile = async (req, res) =>{
       const user = await User.findById(req.user.userId);
 
       if(!user){
-        return res.sstatus(404).json({
+        return res.status(404).json({
             message: "User not found",
         });
       }
@@ -62,6 +62,13 @@ exports.changePassword = async (req, res) =>{
       });
     }
 
+    // Check if user has a password set (not passwordless Google user)
+    if (!user.password) {
+      return res.status(400).json({
+        message: "This account was registered using Google OAuth. Password change is not available.",
+      });
+    }
+
     // Current password verify 
     const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
 
@@ -90,12 +97,54 @@ exports.changePassword = async (req, res) =>{
   }
 };
 
+// Set Password (for passwordless OAuth users)
+exports.setPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({
+        message: "New password is required",
+      });
+    }
+
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // If user already has a password set, they must use changePassword instead
+    if (user.password) {
+      return res.status(400).json({
+        message: "Password is already set for this account. Use change-password instead.",
+      });
+    }
+
+    // Hash and save the password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password set successfully. You can now login using email and password.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
 // Get User By id
 exports.getUserById = async (req, res) => {
   try{
-    const {userId} = req.body;
+    const userId = req.params.userId || req.body.userId;
 
-    const user = await User.findById(userId).select(-password);
+    const user = await User.findById(userId).select("-password");
 
     if(!user){
       return res.status(404).json({
@@ -131,7 +180,7 @@ exports.getAllUsers = async (req, res) => {
       };
     }
     
-    const users = await User.find().select("-password");
+    const users = await User.find(query).select("-password");
 
     return res.status(200).json({
       message: "Users fetched successfully",

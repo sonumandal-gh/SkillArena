@@ -7,7 +7,7 @@ const executeCode = require("../../services/codeExecutionService");
 
 exports.submitAnswer = async (req, res) => {
   try {
-    const { challengeId, answer, code } = req.body;
+    const { challengeId, answer, code, language } = req.body;
 
     // Check challengeId
     if (!challengeId) {
@@ -69,6 +69,7 @@ exports.submitAnswer = async (req, res) => {
         type: "mcq",
         answer: answer,
         code: null,
+        language: "mcq",
         isCorrect: isCorrect,
         xpEarned: xpEarned,
         status: isCorrect ? "accepted" : "wrong",
@@ -107,6 +108,7 @@ exports.submitAnswer = async (req, res) => {
         code,
         testCases: challenge.testCases,
         functionName: challenge.functionName,
+        language: language || "javascript",
       });
 
       let xpEarned = 0;
@@ -130,6 +132,7 @@ exports.submitAnswer = async (req, res) => {
         type: "coding",
         answer: code,
         code: code,
+        language: language || "javascript",
         isCorrect: allPassed,
         xpEarned: xpEarned,
         status: allPassed ? "accepted" : "wrong",

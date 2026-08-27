@@ -28,7 +28,21 @@ const isEqual = (a, b) => {
   return String(a).trim() === String(b).trim();
 };
 
-const executeCode = async ({ code, testCases, functionName }) => {
+const toCppLiteral = (val) => {
+  if (val === null || val === undefined) return "nullptr";
+  if (typeof val === "boolean") return val ? "true" : "false";
+  if (typeof val === "number") return String(val);
+  if (typeof val === "string") return JSON.stringify(val);
+  if (Array.isArray(val)) {
+    return "{" + val.map(toCppLiteral).join(", ") + "}";
+  }
+  if (typeof val === "object") {
+    return "{" + Object.values(val).map(toCppLiteral).join(", ") + "}";
+  }
+  return String(val);
+};
+
+const executeCode = async ({ code, testCases, functionName, language = "javascript" }) => {
   const results = [];
 
   const judgeUrl = process.env.CODE_EXECUTION_URL || "https://judge0-ce.p.rapidapi.com";
@@ -43,7 +57,99 @@ const executeCode = async ({ code, testCases, functionName }) => {
   for (const testCase of testCases) {
     try {
       const args = testCase.input;
-      const wrappedCode = `
+      let wrappedCode = "";
+      let languageId = 63;
+
+      if (language === "python") {
+        languageId = 71;
+        wrappedCode = `
+${code}
+
+import json
+import sys
+
+args = json.loads('${JSON.stringify(args)}')
+try:
+    if isinstance(args, list):
+        result = ${functionName}(*args)
+    else:
+        result = ${functionName}(args)
+    print("###RESULT###" + json.dumps(result))
+except Exception as err:
+    sys.stderr.write(str(err))
+    sys.exit(1)
+`;
+      } else if (language === "cpp" || language === "c++") {
+        languageId = 54;
+        let cppArgs = "";
+        if (Array.isArray(args)) {
+          cppArgs = args.map(toCppLiteral).join(", ");
+        } else {
+          cppArgs = toCppLiteral(args);
+        }
+
+        const hasSolutionClass = /class\s+Solution/i.test(code);
+        const callStatement = hasSolutionClass 
+          ? `Solution solver;\n        auto result = solver.${functionName}(${cppArgs});`
+          : `auto result = ${functionName}(${cppArgs});`;
+
+        wrappedCode = `
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <unordered_map>
+#include <map>
+#include <set>
+#include <unordered_set>
+#include <queue>
+#include <stack>
+#include <numeric>
+
+using namespace std;
+
+// Print helpers
+template <typename T>
+void printResult(const T& val) {
+    cout << val;
+}
+
+void printResult(bool val) {
+    cout << (val ? "true" : "false");
+}
+
+void printResult(const string& val) {
+    cout << "\\"" << val << "\\"";
+}
+
+template <typename T>
+void printResult(const vector<T>& vec) {
+    cout << "[";
+    for (size_t i = 0; i < vec.size(); ++i) {
+        printResult(vec[i]);
+        if (i < vec.size() - 1) cout << ",";
+    }
+    cout << "]";
+}
+
+${code}
+
+int main() {
+    try {
+        ${callStatement}
+        cout << "###RESULT###";
+        printResult(result);
+        cout << endl;
+    } catch (const exception& e) {
+        cerr << e.what() << endl;
+        return 1;
+    }
+    return 0;
+}
+`;
+      } else {
+        languageId = 63;
+        wrappedCode = `
 ${code}
 
 const args = ${JSON.stringify(args)};
@@ -60,12 +166,13 @@ try {
   process.exit(1);
 }
 `;
+      }
 
       const response = await axios.post(
         `${judgeUrl}/submissions?base64_encoded=false&wait=true`,
         {
           source_code: wrappedCode,
-          language_id: 63, // JavaScript (Node.js)
+          language_id: languageId,
         },
         {
           headers: {

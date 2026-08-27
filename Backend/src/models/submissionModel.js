@@ -30,6 +30,12 @@ const submissionSchema = new mongoose.Schema(
             default: null,
         },
 
+        language: {
+            type: String,
+            enum: ["javascript", "python", "cpp", "mcq"],
+            default: "javascript",
+        },
+
         isCorrect: {
             type: Boolean,
             required: true,

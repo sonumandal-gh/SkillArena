@@ -8,6 +8,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 
+const passport = require("./src/config/passport");
+
+app.use(passport.initialize());
+
 // Routes import
 const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");

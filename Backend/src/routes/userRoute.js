@@ -6,6 +6,7 @@ const {authMiddleware} = require("../middleware/authMiddleware");
 const {adminMiddleware} = require("../middleware/adminMiddleware")
 const { updateProfile,
        changePassword, 
+       setPassword,
        getUserById, 
        getAllUsers, 
        deleteUser,
@@ -15,6 +16,8 @@ const { updateProfile,
 router.put("/profile", authMiddleware, updateProfile);
 
 router.put("/change-password", authMiddleware, changePassword);
+
+router.post("/set-password", authMiddleware, setPassword);
 
 router.get("/:userId",authMiddleware, adminMiddleware, getUserById);
 
