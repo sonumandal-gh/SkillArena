@@ -34,8 +34,8 @@ exports.getLeaderboard = async (req, res) => {
 
 // Calculate Rank
 exports.calculateRank = async (req, res) => {
-  try{
-     const userId = req.params.userId;
+  try {
+    const userId = req.params.userId;
 
     const user = await User.findById(userId, "xp name");
 
@@ -57,7 +57,7 @@ exports.calculateRank = async (req, res) => {
       name: user.name,
       xp: user.xp,
     });
-  }catch (error) {
+  } catch (error) {
     console.error(error);
 
     return res.status(500).json({
@@ -156,7 +156,7 @@ exports.searchLeaderboard = async (req, res) => {
 // Get My Rank
 exports.getMyRank = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const user = await User.findById(userId, "name xp");
 
