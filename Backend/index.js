@@ -5,6 +5,7 @@ require("dotenv").config();
 const mongoConnect = require("./src/config/db");
 
 const app = express();
+app.set("trust proxy", 1);
 
 // Middleware
 // Dynamic CORS allowing all localhost ports and configured FRONTEND_URL
