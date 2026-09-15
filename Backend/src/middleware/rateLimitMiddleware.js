@@ -1,5 +1,15 @@
 const rateLimitStore = {};
 
+// Clean up expired IP entries every 10 minutes to prevent memory leaks
+setInterval(() => {
+  const now = Date.now();
+  for (const ip in rateLimitStore) {
+    if (now > rateLimitStore[ip].resetTime) {
+      delete rateLimitStore[ip];
+    }
+  }
+}, 10 * 60 * 1000);
+
 exports.rateLimiter = (limitCount, windowMs) => {
   return (req, res, next) => {
     const ip = req.ip || req.headers["x-forwarded-for"] || req.socket.remoteAddress;

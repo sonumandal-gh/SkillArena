@@ -10,7 +10,7 @@ exports.registerUser = async (req, res) =>{
     //    Check all fields
     if(!name || !email || !password){
         return res.status(400).json({
-            message: "All fields are require"
+            message: "All fields are required"
         });
     }
 
@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) =>{
 
     if(existingUser){
         return res.status(400).json({
-            message: "User alredy exists"
+            message: "User already exists with this email"
         });
     }
 
@@ -58,7 +58,7 @@ exports.loginUser = async (req, res) => {
     // Check email and password
     if(!password || !email){
       return res.status(400).json({
-        message: "All Files are require",
+        message: "Email and password are required",
       });
     }
     
@@ -67,7 +67,14 @@ exports.loginUser = async (req, res) => {
 
     if(!user){
       return res.status(400).json({
-        message: "User not exist"
+        message: "User does not exist with this email"
+      });
+    }
+
+    // Check if user registered via Google OAuth (password is null)
+    if (!user.password) {
+      return res.status(400).json({
+        message: "This account was created using Google OAuth. Please sign in using Google.",
       });
     }
 
@@ -76,7 +83,7 @@ exports.loginUser = async (req, res) => {
 
     if(!isMatch){
       return res.status(400).json({
-        message: "Password Not Matched"
+        message: "Invalid credentials. Password does not match."
       });
     }
 

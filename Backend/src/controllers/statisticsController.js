@@ -295,3 +295,55 @@ exports.getCategoryStats = async (req, res) => {
     });
   }
 };
+
+// Get Admin Overview Statistics
+exports.getAdminStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalChallenges = await Challenge.countDocuments();
+    const totalSubmissions = await Submission.countDocuments();
+    const totalAdmins = await User.countDocuments({ role: "admin" });
+    const correctSubmissions = await Submission.countDocuments({ isCorrect: true });
+
+    return res.status(200).json({
+      message: "Admin statistics fetched successfully",
+      stats: {
+        totalUsers,
+        totalChallenges,
+        totalSubmissions,
+        totalAdmins,
+        correctSubmissions,
+      },
+    });
+  } catch (error) {
+    console.error("Admin stats error:", error);
+    return res.status(500).json({
+      message: "Server error fetching admin stats",
+      error: error.message,
+    });
+  }
+};
+
+// Get Public Platform Statistics (No Auth required for Home Page)
+exports.getPublicStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalChallenges = await Challenge.countDocuments();
+    const totalSubmissions = await Submission.countDocuments();
+
+    return res.status(200).json({
+      message: "Public statistics fetched successfully",
+      stats: {
+        totalUsers,
+        totalChallenges,
+        totalSubmissions,
+      },
+    });
+  } catch (error) {
+    console.error("Public stats error:", error);
+    return res.status(500).json({
+      message: "Server error fetching public stats",
+      error: error.message,
+    });
+  }
+};

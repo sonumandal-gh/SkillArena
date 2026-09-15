@@ -165,10 +165,14 @@ exports.updateChallenge = async (req, res) => {
     const {
       title,
       description,
+      type,
       category,
       difficulty,
       options,
       correctAnswer,
+      starterCode,
+      functionName,
+      testCases,
       points,
     } = req.body;
 
@@ -182,12 +186,14 @@ exports.updateChallenge = async (req, res) => {
 
     if (title !== undefined) challenge.title = title;
     if (description !== undefined) challenge.description = description;
+    if (type !== undefined) challenge.type = type;
     if (category !== undefined) challenge.category = category;
     if (difficulty !== undefined) challenge.difficulty = difficulty;
     if (options !== undefined) challenge.options = options;
-    if (correctAnswer !== undefined) {
-      challenge.correctAnswer = correctAnswer;
-    }
+    if (correctAnswer !== undefined) challenge.correctAnswer = correctAnswer;
+    if (starterCode !== undefined) challenge.starterCode = starterCode;
+    if (functionName !== undefined) challenge.functionName = functionName;
+    if (testCases !== undefined) challenge.testCases = testCases;
     if (points !== undefined) challenge.points = points;
 
     await challenge.save();

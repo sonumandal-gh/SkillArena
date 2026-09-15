@@ -142,10 +142,9 @@ exports.submitAnswer = async (req, res) => {
       if (allPassed && !alreadySolved) {
         user.xp += xpEarned;
         user.problemsSolved += 1;
-        await user.save();
       }
 
-      // Update accuracy
+      // Update accuracy (and save user)
       await updateAccuracy(user);
 
       return res.status(201).json({
@@ -257,4 +256,46 @@ const updateAccuracy = async (user) => {
   }
 
   await user.save();
+};
+
+// 5. Run Code Only (Dry Run Test Cases)
+exports.runCode = async (req, res) => {
+  try {
+    const { challengeId, code, language } = req.body;
+
+    if (!challengeId || !code) {
+      return res.status(400).json({
+        message: "challengeId and code are required",
+      });
+    }
+
+    const challenge = await Challenge.findById(challengeId);
+    if (!challenge) {
+      return res.status(404).json({
+        message: "Challenge not found",
+      });
+    }
+
+    const { allPassed, results } = await executeCode({
+      code,
+      testCases: challenge.testCases,
+      functionName: challenge.functionName,
+      language: language || "javascript",
+    });
+
+    return res.status(200).json({
+      message: allPassed
+        ? "All test cases passed!"
+        : "Some test cases failed.",
+      allPassed,
+      results,
+      isRunOnly: true,
+    });
+  } catch (error) {
+    console.error("Run code error:", error);
+    return res.status(500).json({
+      message: "Server error during code execution",
+      error: error.message,
+    });
+  }
 };

@@ -5,21 +5,22 @@ const { rateLimiter } = require("../middleware/rateLimitMiddleware");
 
 const router = express.Router();
 
-// Rate limiter for authentication routes (15 requests per 15 minutes)
-const authLimiter = rateLimiter(15, 15 * 60 * 1000);
+// Rate limiter for authentication routes (100 requests per 15 minutes)
+const authLimiter = rateLimiter(100, 15 * 60 * 1000);
 
 // Google Login 
 router.get("/google",
-    passport.authenticate("google",{
+    passport.authenticate("google", {
         scope: ["profile", "email"],
+        session: false,
     })
 );
 
 // Google Callback
 router.get("/google/callback",
-    passport.authenticate("google", { 
-        session: false, 
-        failureRedirect: `${process.env.FRONTEND_URL || "http://localhost:3000"}/login` 
+    passport.authenticate("google", {
+        session: false,
+        failureRedirect: `${process.env.FRONTEND_URL || "http://localhost:5173"}/login?error=google_auth_failed`
     }),
     async (req, res) => {
         try {
@@ -28,7 +29,7 @@ router.get("/google/callback",
                 userId: req.user._id,
                 role: req.user.role
             },
-            process.env.JWT_SECRET, {
+                process.env.JWT_SECRET, {
                 expiresIn: "15m"
             });
 
@@ -36,7 +37,7 @@ router.get("/google/callback",
             const refreshToken = jwt.sign({
                 userId: req.user._id
             },
-            process.env.JWT_SECRET, {
+                process.env.JWT_SECRET, {
                 expiresIn: "7d"
             });
 
@@ -45,7 +46,7 @@ router.get("/google/callback",
             await req.user.save();
 
             // Redirect to frontend with tokens
-            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
             return res.redirect(`${frontendUrl}/oauth-success?token=${accessToken}&refreshToken=${refreshToken}`);
         } catch (error) {
             return res.status(500).json({
@@ -56,9 +57,9 @@ router.get("/google/callback",
     }
 );
 
-const {registerUser, loginUser, getMe, refreshToken, logoutUser} = require("../controllers/authController");
-const {authMiddleware} = require("../middleware/authMiddleware");
-const {adminMiddleware} = require("../middleware/adminMiddleware");
+const { registerUser, loginUser, getMe, refreshToken, logoutUser } = require("../controllers/authController");
+const { authMiddleware } = require("../middleware/authMiddleware");
+const { adminMiddleware } = require("../middleware/adminMiddleware");
 
 router.post("/register", authLimiter, registerUser);
 router.post("/login", authLimiter, loginUser);

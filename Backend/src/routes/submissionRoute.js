@@ -4,6 +4,7 @@ const router = express.Router();
 
 const {
   submitAnswer,
+  runCode,
   getMySubmission,
   getSubmissionById
 } = require("../controllers/submissionController");
@@ -13,6 +14,13 @@ const { rateLimiter } = require("../middleware/rateLimitMiddleware");
 
 // Limit code execution/submissions to 5 requests per minute
 const submissionLimiter = rateLimiter(5, 60 * 1000);
+
+router.post(
+  "/run",
+  authMiddleware,
+  submissionLimiter,
+  runCode
+);
 
 router.post(
   "/submit",

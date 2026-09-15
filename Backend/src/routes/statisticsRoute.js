@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const { authMiddleware } = require("../middleware/authMiddleware");
+const { adminMiddleware } = require("../middleware/adminMiddleware");
 
 const {
   getDashboardStats,
@@ -11,7 +12,19 @@ const {
   getCategoryStats,
   getXPProgress,
   getUserProgress,
+  getAdminStats,
+  getPublicStats,
 } = require("../controllers/statisticsController");
+
+// Public platform stats (no auth)
+router.get("/public", getPublicStats);
+
+router.get(
+  "/admin",
+  authMiddleware,
+  adminMiddleware,
+  getAdminStats
+);
 
 
 router.get(

@@ -1,4 +1,5 @@
 const axios = require("axios");
+const vm = require("vm");
 
 const isEqual = (a, b) => {
   if (a === b) return true;
@@ -28,6 +29,45 @@ const isEqual = (a, b) => {
   return String(a).trim() === String(b).trim();
 };
 
+const executeJsLocally = (code, functionName, args) => {
+  try {
+    const sandbox = { console };
+    vm.createContext(sandbox);
+
+    const script = new vm.Script(`
+${code}
+
+(function() {
+  let fn = null;
+  const targetFnName = ${JSON.stringify(functionName)};
+  try { fn = eval(targetFnName); } catch(e) {}
+  if (typeof fn !== 'function') {
+    try { fn = eval('solution'); } catch(e) {}
+  }
+  if (typeof fn !== 'function') {
+    try { fn = eval('twoSum'); } catch(e) {}
+  }
+
+  if (typeof fn !== 'function') {
+    throw new Error("Function '" + targetFnName + "' is not defined in your code");
+  }
+
+  const args = ${JSON.stringify(args)};
+  if (Array.isArray(args)) {
+    return fn(...args);
+  } else {
+    return fn(args);
+  }
+})();
+`);
+
+    const result = script.runInContext(sandbox, { timeout: 3000 });
+    return { success: true, result };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
 const toCppLiteral = (val) => {
   if (val === null || val === undefined) return "nullptr";
   if (typeof val === "boolean") return val ? "true" : "false";
@@ -54,11 +94,46 @@ const executeCode = async ({ code, testCases, functionName, language = "javascri
     host = "judge0-ce.p.rapidapi.com";
   }
 
+  const isJs = language === "javascript" || language === "js";
+
   for (const testCase of testCases) {
+    const args = testCase.input;
+    const formattedExpected = typeof testCase.expectedOutput === "object"
+      ? JSON.stringify(testCase.expectedOutput)
+      : String(testCase.expectedOutput);
+
+    // 1. NATIVE LOCAL JS VM EXECUTION (Fast, 100% reliable, zero API key/network issues)
+    if (isJs) {
+      const localRun = executeJsLocally(code, functionName, args);
+      let actualOutput = "";
+      let passed = false;
+      let statusDescription = "Accepted";
+
+      if (localRun.success) {
+        const parsedStdout = localRun.result;
+        actualOutput = typeof parsedStdout === "object" ? JSON.stringify(parsedStdout) : String(parsedStdout);
+        passed = isEqual(parsedStdout, testCase.expectedOutput);
+        statusDescription = passed ? "Accepted" : "Wrong Answer";
+      } else {
+        statusDescription = localRun.error || "Runtime Error";
+        actualOutput = localRun.error || "Runtime Error";
+      }
+
+      results.push({
+        input: testCase.input,
+        expectedOutput: formattedExpected,
+        actualOutput,
+        passed,
+        status: statusDescription,
+      });
+
+      continue;
+    }
+
+    // 2. REMOTE JUDGE0 EXECUTION FOR PYTHON / C++
     try {
-      const args = testCase.input;
       let wrappedCode = "";
-      let languageId = 63;
+      let languageId = 71;
 
       if (language === "python") {
         languageId = 71;
@@ -68,7 +143,7 @@ ${code}
 import json
 import sys
 
-args = json.loads('${JSON.stringify(args)}')
+args = json.loads(${JSON.stringify(JSON.stringify(args))})
 try:
     if isinstance(args, list):
         result = ${functionName}(*args)
@@ -119,7 +194,7 @@ void printResult(bool val) {
 }
 
 void printResult(const string& val) {
-    cout << "\\"" << val << "\\"";
+    cout << val;
 }
 
 template <typename T>
@@ -147,25 +222,6 @@ int main() {
     return 0;
 }
 `;
-      } else {
-        languageId = 63;
-        wrappedCode = `
-${code}
-
-const args = ${JSON.stringify(args)};
-try {
-  let result;
-  if (Array.isArray(args)) {
-    result = ${functionName}(...args);
-  } else {
-    result = ${functionName}(args);
-  }
-  console.log("###RESULT###" + JSON.stringify(result));
-} catch (err) {
-  console.error(err);
-  process.exit(1);
-}
-`;
       }
 
       const response = await axios.post(
@@ -180,6 +236,7 @@ try {
             "x-rapidapi-host": host,
             "x-rapidapi-key": apiKey,
           },
+          timeout: 8000,
         }
       );
 
@@ -214,7 +271,6 @@ try {
           actualOutput = stdout;
         }
 
-        // Compare expectedOutput and parsedStdout
         let parsedExpected = testCase.expectedOutput;
         passed = isEqual(parsedStdout, parsedExpected);
       } else {
@@ -224,7 +280,7 @@ try {
 
       results.push({
         input: testCase.input,
-        expectedOutput: String(testCase.expectedOutput),
+        expectedOutput: formattedExpected,
         actualOutput,
         passed,
         status: statusDescription,
@@ -232,14 +288,14 @@ try {
 
     } catch (error) {
       console.error(
-        "Code execution error:",
+        "Remote code execution error:",
         error.response?.data || error.message
       );
 
       results.push({
         input: testCase.input,
-        expectedOutput: String(testCase.expectedOutput),
-        actualOutput: "",
+        expectedOutput: formattedExpected,
+        actualOutput: error.response?.data?.message || error.message || "Execution Error",
         passed: false,
         status: error.response?.data?.message || error.message || "Execution Error",
       });
