@@ -322,15 +322,40 @@ const ChallengeDetail = () => {
                 const optionKey = String.fromCharCode(65 + index);
                 const isSelected = selectedOption === option;
 
+                let cardClass = "";
+                if (mcqResult?.submission) {
+                  const isCorrectAnswer =
+                    challenge.correctAnswer &&
+                    option.trim().toLowerCase() === challenge.correctAnswer.trim().toLowerCase();
+
+                  if (isSelected) {
+                    cardClass = mcqResult.submission.isCorrect ? "correct" : "wrong";
+                  } else if (!mcqResult.submission.isCorrect && isCorrectAnswer) {
+                    cardClass = "correct";
+                  }
+                } else if (isSelected) {
+                  cardClass = "selected";
+                }
+
                 return (
                   <button
                     key={index}
                     type="button"
-                    className={`mcq-option-card ${isSelected ? "selected" : ""}`}
-                    onClick={() => setSelectedOption(option)}
+                    className={`mcq-option-card ${cardClass}`}
+                    onClick={() => {
+                      if (!mcqResult?.submission?.isCorrect) {
+                        setSelectedOption(option);
+                        if (mcqResult && !mcqResult.submission?.isCorrect) {
+                          setMcqResult(null);
+                        }
+                      }
+                    }}
+                    disabled={mcqSubmitting || (mcqResult?.submission?.isCorrect)}
                   >
                     <div className="mcq-option-key">{optionKey}</div>
-                    <span>{option}</span>
+                    <span style={{ flex: 1 }}>{option}</span>
+                    {cardClass === "correct" && <CheckCircle2 size={20} color="#34d399" />}
+                    {cardClass === "wrong" && <XCircle size={20} color="#fb7185" />}
                   </button>
                 );
               })}
@@ -347,41 +372,84 @@ const ChallengeDetail = () => {
                 style={{ marginBottom: "20px" }}
               >
                 {mcqResult.submission?.isCorrect ? (
-                  <CheckCircle2 size={20} />
+                  <CheckCircle2 size={22} color="#34d399" />
                 ) : (
-                  <AlertCircle size={20} />
+                  <AlertCircle size={22} color="#fb7185" />
                 )}
                 <div>
-                  <strong>{mcqResult.message}</strong>
-                  {mcqResult.submission?.isCorrect && mcqResult.submission?.xpEarned > 0 && (
-                    <div style={{ fontSize: "0.82rem", marginTop: "2px" }}>
-                      Earned +{mcqResult.submission.xpEarned} XP!
-                    </div>
-                  )}
+                  <strong style={{ fontSize: "1rem" }}>
+                    {mcqResult.submission?.isCorrect ? "Correct Answer! 🎉" : "Wrong Answer"}
+                  </strong>
+                  <div style={{ fontSize: "0.88rem", marginTop: "2px", opacity: 0.9 }}>
+                    {mcqResult.submission?.isCorrect
+                      ? mcqResult.submission?.xpEarned > 0
+                        ? `Congratulations! You earned +${mcqResult.submission.xpEarned} XP!`
+                        : "You have completed this quiz!"
+                      : "That option was incorrect. Pick another option and try again!"}
+                  </div>
                 </div>
               </div>
             )}
 
             {/* Action Buttons */}
-            <button
-              type="button"
-              className="arena-btn"
-              style={{ width: "100%", padding: "14px" }}
-              onClick={handleMcqSubmit}
-              disabled={!selectedOption || mcqSubmitting}
-            >
-              {mcqSubmitting ? (
-                <>
-                  <div className="auth-spinner" />
-                  <span>Checking Answer...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles size={18} />
-                  <span>Submit Quiz Answer</span>
-                </>
-              )}
-            </button>
+            {mcqResult?.submission?.isCorrect ? (
+              <div style={{ display: "flex", gap: "12px", width: "100%" }}>
+                <Link
+                  to="/challenges"
+                  className="arena-btn"
+                  style={{ flex: 1, padding: "14px", justifyContent: "center" }}
+                >
+                  <ArrowLeft size={18} />
+                  <span>Back to Challenges</span>
+                </Link>
+                <button
+                  type="button"
+                  className="arena-btn arena-btn-secondary"
+                  style={{ padding: "14px 20px" }}
+                  onClick={() => {
+                    setMcqResult(null);
+                    setSelectedOption("");
+                  }}
+                >
+                  <RotateCcw size={16} />
+                  <span>Reset Quiz</span>
+                </button>
+              </div>
+            ) : mcqResult && !mcqResult.submission?.isCorrect ? (
+              <div style={{ display: "flex", gap: "12px", width: "100%" }}>
+                <button
+                  type="button"
+                  className="arena-btn"
+                  style={{ flex: 1, padding: "14px", justifyContent: "center" }}
+                  onClick={() => {
+                    setMcqResult(null);
+                  }}
+                >
+                  <RotateCcw size={18} />
+                  <span>Try Again</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="arena-btn"
+                style={{ width: "100%", padding: "14px" }}
+                onClick={handleMcqSubmit}
+                disabled={!selectedOption || mcqSubmitting}
+              >
+                {mcqSubmitting ? (
+                  <>
+                    <div className="auth-spinner" />
+                    <span>Checking Answer...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} />
+                    <span>Submit Quiz Answer</span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       ) : (

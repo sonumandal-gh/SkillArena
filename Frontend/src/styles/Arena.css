@@ -696,6 +696,20 @@
   box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
 }
 
+.mcq-option-card.correct {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+
+.mcq-option-card.wrong {
+  background: rgba(244, 63, 94, 0.15);
+  border-color: #f43f5e;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.25);
+  color: #fb7185;
+}
+
 .mcq-option-key {
   width: 32px;
   height: 32px;
@@ -712,6 +726,16 @@
 
 .mcq-option-card.selected .mcq-option-key {
   background: #6366f1;
+  color: white;
+}
+
+.mcq-option-card.correct .mcq-option-key {
+  background: #10b981;
+  color: white;
+}
+
+.mcq-option-card.wrong .mcq-option-key {
+  background: #f43f5e;
   color: white;
 }
 

@@ -32,6 +32,24 @@ const DIFFICULTIES = ["All", "Easy", "Medium", "Hard"];
 const TYPES = ["Coding", "MCQ"];
 const STATUSES = ["All", "Solved", "Unsolved"];
 
+const INITIAL_NEW_CHALLENGE = {
+  title: "",
+  description: "",
+  type: "coding", // 'coding' | 'mcq'
+  category: "Arrays",
+  difficulty: "easy",
+  points: 20,
+  // MCQ fields
+  options: ["Option A", "Option B", "Option C", "Option D"],
+  correctAnswer: "Option A",
+  // Coding fields
+  starterCode: `function solution(arr) {\n  // Write your code here\n  return arr;\n}`,
+  functionName: "solution",
+  testCases: [
+    { input: "", expectedOutput: "" },
+  ],
+};
+
 const Challenges = () => {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
@@ -51,24 +69,7 @@ const Challenges = () => {
   const [modalError, setModalError] = useState("");
   const [modalSuccess, setModalSuccess] = useState("");
 
-  const [newChallenge, setNewChallenge] = useState({
-    title: "",
-    description: "",
-    type: "coding", // 'coding' | 'mcq'
-    category: "Arrays",
-    difficulty: "easy",
-    points: 20,
-    // MCQ fields
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    correctAnswer: "Option A",
-    // Coding fields
-    starterCode: `function solution(arr) {\n  // Write your code here\n  return arr;\n}`,
-    functionName: "solution",
-    testCases: [
-      { input: "[1, 2, 3]", expectedOutput: "[1, 2, 3]" },
-      { input: "[4, 5]", expectedOutput: "[4, 5]" },
-    ],
-  });
+  const [newChallenge, setNewChallenge] = useState(INITIAL_NEW_CHALLENGE);
 
   // Fetch user solved submissions
   useEffect(() => {
@@ -152,7 +153,18 @@ const Challenges = () => {
       } else {
         payload.starterCode = newChallenge.starterCode;
         payload.functionName = newChallenge.functionName;
-        payload.testCases = newChallenge.testCases.map((tc) => {
+
+        const validTestCases = newChallenge.testCases.filter(
+          (tc) => tc.input.trim() !== "" || tc.expectedOutput.trim() !== ""
+        );
+
+        if (validTestCases.length === 0) {
+          setModalError("Please provide at least one valid test case.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        payload.testCases = validTestCases.map((tc) => {
           let parsedInput = tc.input;
           let parsedExpected = tc.expectedOutput;
           try { parsedInput = JSON.parse(tc.input); } catch { /* keep string */ }
@@ -164,6 +176,7 @@ const Challenges = () => {
       const res = await challengeService.createChallenge(payload);
       if (res?.challenge) {
         setModalSuccess("Challenge created successfully!");
+        setNewChallenge(INITIAL_NEW_CHALLENGE);
         setTimeout(() => {
           setIsModalOpen(false);
           setModalSuccess("");
@@ -633,34 +646,92 @@ const Challenges = () => {
                   </div>
 
                   <div>
-                    <label className="auth-input-label">Test Case 1 (Input & Expected Output in JSON format)</label>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                      <input
-                        type="text"
-                        className="auth-input"
-                        style={{ paddingLeft: "14px" }}
-                        placeholder='Input: [1, 2, 3]'
-                        value={newChallenge.testCases[0]?.input || ""}
-                        onChange={(e) => {
-                          const updated = [...newChallenge.testCases];
-                          updated[0] = { ...updated[0], input: e.target.value };
-                          setNewChallenge({ ...newChallenge, testCases: updated });
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                      <label className="auth-input-label" style={{ marginBottom: 0 }}>
+                        Test Cases (JSON format inputs & expected outputs)
+                      </label>
+                      <button
+                        type="button"
+                        className="arena-btn arena-btn-secondary"
+                        style={{ padding: "4px 10px", fontSize: "12px", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                        onClick={() => {
+                          setNewChallenge((prev) => ({
+                            ...prev,
+                            testCases: [...prev.testCases, { input: "", expectedOutput: "" }],
+                          }));
                         }}
-                        required
-                      />
-                      <input
-                        type="text"
-                        className="auth-input"
-                        style={{ paddingLeft: "14px" }}
-                        placeholder='Expected: [1, 2, 3]'
-                        value={newChallenge.testCases[0]?.expectedOutput || ""}
-                        onChange={(e) => {
-                          const updated = [...newChallenge.testCases];
-                          updated[0] = { ...updated[0], expectedOutput: e.target.value };
-                          setNewChallenge({ ...newChallenge, testCases: updated });
-                        }}
-                        required
-                      />
+                      >
+                        <Plus size={14} /> Add Test Case
+                      </button>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                      {newChallenge.testCases.map((tc, idx) => (
+                        <div key={idx} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                          <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                            <div>
+                              <label style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "4px", display: "block" }}>
+                                Test Case {idx + 1} Input
+                              </label>
+                              <input
+                                type="text"
+                                className="auth-input"
+                                style={{ paddingLeft: "14px" }}
+                                placeholder='e.g. [1, 2, 3, 1]'
+                                value={tc.input}
+                                onChange={(e) => {
+                                  const updated = [...newChallenge.testCases];
+                                  updated[idx] = { ...updated[idx], input: e.target.value };
+                                  setNewChallenge({ ...newChallenge, testCases: updated });
+                                }}
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "4px", display: "block" }}>
+                                Expected Output
+                              </label>
+                              <input
+                                type="text"
+                                className="auth-input"
+                                style={{ paddingLeft: "14px" }}
+                                placeholder='e.g. true'
+                                value={tc.expectedOutput}
+                                onChange={(e) => {
+                                  const updated = [...newChallenge.testCases];
+                                  updated[idx] = { ...updated[idx], expectedOutput: e.target.value };
+                                  setNewChallenge({ ...newChallenge, testCases: updated });
+                                }}
+                                required
+                              />
+                            </div>
+                          </div>
+                          {newChallenge.testCases.length > 1 && (
+                            <button
+                              type="button"
+                              style={{
+                                background: "rgba(239, 68, 68, 0.15)",
+                                border: "1px solid rgba(239, 68, 68, 0.3)",
+                                color: "#f87171",
+                                borderRadius: "8px",
+                                padding: "10px",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                marginTop: "19px",
+                              }}
+                              onClick={() => {
+                                const updated = newChallenge.testCases.filter((_, i) => i !== idx);
+                                setNewChallenge({ ...newChallenge, testCases: updated });
+                              }}
+                              title="Remove Test Case"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
