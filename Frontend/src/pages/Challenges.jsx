@@ -426,6 +426,80 @@ const Challenges = () => {
             )}
 
             <form onSubmit={handleCreateChallenge} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {/* Type Switcher */}
+              <div>
+                <label className="auth-input-label" style={{ marginBottom: "8px", display: "block" }}>
+                  Challenge Type
+                </label>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "10px",
+                    background: "rgba(15, 23, 42, 0.6)",
+                    padding: "6px",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setNewChallenge({ ...newChallenge, type: "coding" })}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      padding: "10px 16px",
+                      borderRadius: "8px",
+                      border: "none",
+                      fontWeight: 600,
+                      fontSize: "0.9rem",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      background:
+                        newChallenge.type === "coding"
+                          ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)"
+                          : "transparent",
+                      color: newChallenge.type === "coding" ? "#ffffff" : "#94a3b8",
+                      boxShadow:
+                        newChallenge.type === "coding" ? "0 4px 12px rgba(99, 102, 241, 0.3)" : "none",
+                    }}
+                  >
+                    <Code2 size={18} />
+                    <span>Coding</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setNewChallenge({ ...newChallenge, type: "mcq" })}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      padding: "10px 16px",
+                      borderRadius: "8px",
+                      border: "none",
+                      fontWeight: 600,
+                      fontSize: "0.9rem",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      background:
+                        newChallenge.type === "mcq"
+                          ? "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)"
+                          : "transparent",
+                      color: newChallenge.type === "mcq" ? "#ffffff" : "#94a3b8",
+                      boxShadow:
+                        newChallenge.type === "mcq" ? "0 4px 12px rgba(6, 182, 212, 0.3)" : "none",
+                    }}
+                  >
+                    <HelpCircle size={18} />
+                    <span>MCQ</span>
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label className="auth-input-label">Challenge Title</label>
                 <input
@@ -453,15 +527,18 @@ const Challenges = () => {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
-                  <label className="auth-input-label">Type</label>
+                  <label className="auth-input-label">Category</label>
                   <select
                     className="auth-input"
                     style={{ paddingLeft: "14px" }}
-                    value={newChallenge.type}
-                    onChange={(e) => setNewChallenge({ ...newChallenge, type: e.target.value })}
+                    value={newChallenge.category}
+                    onChange={(e) => setNewChallenge({ ...newChallenge, category: e.target.value })}
                   >
-                    <option value="coding">Coding Challenge</option>
-                    <option value="mcq">MCQ Quiz</option>
+                    {CATEGORIES.filter((c) => c !== "All").map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
