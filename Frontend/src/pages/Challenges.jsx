@@ -29,7 +29,7 @@ const CATEGORIES = [
 ];
 
 const DIFFICULTIES = ["All", "Easy", "Medium", "Hard"];
-const TYPES = ["All", "Coding", "MCQ"];
+const TYPES = ["Coding", "MCQ"];
 const STATUSES = ["All", "Solved", "Unsolved"];
 
 const Challenges = () => {
@@ -42,7 +42,7 @@ const Challenges = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
-  const [selectedType, setSelectedType] = useState("All");
+  const [selectedType, setSelectedType] = useState("Coding");
   const [selectedStatus, setSelectedStatus] = useState("All");
 
   // Admin Create Challenge Modal state
@@ -103,9 +103,7 @@ const Challenges = () => {
       });
       if (data?.challenges) {
         let list = data.challenges;
-        if (selectedType !== "All") {
-          list = list.filter((c) => c.type?.toLowerCase() === selectedType.toLowerCase());
-        }
+        list = list.filter((c) => (c.type || "coding").toLowerCase() === selectedType.toLowerCase());
         if (selectedStatus === "Solved") {
           list = list.filter((c) => solvedIds.has(c._id));
         } else if (selectedStatus === "Unsolved") {
