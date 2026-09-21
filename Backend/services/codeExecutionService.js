@@ -54,6 +54,9 @@ ${code}
 
   const args = ${JSON.stringify(args)};
   if (Array.isArray(args)) {
+    if (fn.length === 1 && args.length > 1 && !Array.isArray(args[0])) {
+      return fn(args);
+    }
     return fn(...args);
   } else {
     return fn(args);
@@ -146,7 +149,13 @@ import sys
 args = json.loads(${JSON.stringify(JSON.stringify(args))})
 try:
     if isinstance(args, list):
-        result = ${functionName}(*args)
+        import inspect
+        func_obj = globals().get(${JSON.stringify(functionName)})
+        sig = inspect.signature(func_obj) if func_obj else None
+        if sig and len(sig.parameters) == 1 and len(args) > 1 and not isinstance(args[0], list):
+            result = ${functionName}(args)
+        else:
+            result = ${functionName}(*args)
     else:
         result = ${functionName}(args)
     print("###RESULT###" + json.dumps(result))
