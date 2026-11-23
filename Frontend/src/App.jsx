@@ -2,10 +2,12 @@ import "./styles/App.css";
 
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -17,6 +19,7 @@ import ChallengeDetail from "./pages/ChallengeDetail";
 import Submissions from "./pages/Submissions";
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+
 import Statistics from "./pages/Statistics";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
@@ -40,6 +43,7 @@ function AppContent() {
           <Routes>
             {/* Public Home Landing Page */}
             <Route path="/" element={<Home />} />
+
 
             {/* Public Auth Routes */}
             <Route
@@ -146,6 +150,9 @@ function AppContent() {
           </Routes>
         </main>
       </div>
+
+      {/* Persistent Floating Color Theme Switcher */}
+      <ThemeSwitcher variant="floating" />
     </div>
   );
 }
@@ -153,9 +160,11 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

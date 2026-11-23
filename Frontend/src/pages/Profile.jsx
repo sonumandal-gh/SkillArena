@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 import userService from "../services/userService";
 import "../styles/Arena.css";
 import {
@@ -14,10 +15,12 @@ import {
   Edit3,
   AlertCircle,
   ShieldAlert,
+  Palette,
 } from "lucide-react";
 
 const Profile = () => {
   const { user, logout, refreshUser } = useAuth();
+  const { themeId, changeTheme, presets, activeTheme } = useTheme();
   const navigate = useNavigate();
 
   // Edit Name State
@@ -187,6 +190,7 @@ const Profile = () => {
         </div>
       </div>
 
+
       {/* Stats Summary Grid */}
       <div className="arena-stats-grid" style={{ marginBottom: "28px" }}>
         <div className="arena-stat-card">
@@ -354,6 +358,77 @@ const Profile = () => {
           </form>
         </div>
 
+      </div>
+
+      {/* Theme & Color Combination Customizer Card */}
+      <div className="arena-card" style={{ marginTop: "24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: "1.2rem", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
+              <Palette size={20} color={activeTheme.primary} />
+              <span>Arena Color Combinations & Visual Aesthetic</span>
+            </h2>
+            <p style={{ margin: "4px 0 0 0", color: "#94a3b8", fontSize: "0.88rem" }}>
+              Choose your personal theme preset. Dynamic glow, button gradients, and canvas particles synchronize instantly.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "12px" }}>
+          {presets.map((preset) => {
+            const isSelected = preset.id === themeId;
+            return (
+              <div
+                key={preset.id}
+                onClick={() => changeTheme(preset.id)}
+                style={{
+                  padding: "14px",
+                  borderRadius: "14px",
+                  background: isSelected ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.03)",
+                  border: isSelected ? `2px solid ${preset.primary}` : "1px solid rgba(255, 255, 255, 0.1)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  transition: "all 0.2s ease",
+                  boxShadow: isSelected ? `0 0 16px ${preset.glow}` : "none",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <div
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "10px",
+                      background: preset.gradient,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "16px",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
+                    }}
+                  >
+                    {preset.icon}
+                  </div>
+                  <div>
+                    <div style={{ color: "#f8fafc", fontWeight: 700, fontSize: "0.9rem" }}>
+                      {preset.name}
+                    </div>
+                    <div style={{ color: "#94a3b8", fontSize: "0.74rem" }}>
+                      {preset.subtitle}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.primary }} />
+                  <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.accent }} />
+                  <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.secondary }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

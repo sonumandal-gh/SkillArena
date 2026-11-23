@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useTheme } from "../context/ThemeContext";
 import statisticsService from "../services/statisticsService";
 import "../styles/Arena.css";
 import {
@@ -14,10 +15,13 @@ import {
   Terminal,
   Cpu,
   Globe,
+  Layers,
+  Palette,
 } from "lucide-react";
 
 const Home = () => {
   const { user, isAuthenticated } = useAuth();
+  const { activeTheme } = useTheme();
   const [platformStats, setPlatformStats] = useState(null);
 
   useEffect(() => {
@@ -128,7 +132,7 @@ const Home = () => {
                 style={{
                   padding: "12px 28px",
                   fontSize: "1rem",
-                  boxShadow: "0 0 24px rgba(99, 102, 241, 0.4)",
+                  boxShadow: "0 0 24px var(--arena-glow-color, rgba(99, 102, 241, 0.4))",
                 }}
               >
                 <Sparkles size={18} />
@@ -150,7 +154,7 @@ const Home = () => {
               style={{
                 padding: "12px 28px",
                 fontSize: "1rem",
-                boxShadow: "0 0 24px rgba(99, 102, 241, 0.4)",
+                boxShadow: "0 0 24px var(--arena-glow-color, rgba(99, 102, 241, 0.4))",
               }}
             >
               <Swords size={18} />
@@ -264,6 +268,30 @@ const Home = () => {
             </h3>
             <p style={{ color: "#94a3b8", fontSize: "0.9rem", margin: 0, lineHeight: 1.5 }}>
               Track your accuracy percentage, difficulty breakdown, category strength, and progress overtime.
+            </p>
+          </div>
+
+          <div className="arena-card" style={{ padding: "24px", border: "1px solid var(--arena-primary)" }}>
+            <div className="stat-icon-wrap stat-icon-purple" style={{ marginBottom: "16px" }}>
+              <Sparkles size={22} color="var(--arena-primary)" />
+            </div>
+            <h3 style={{ color: "#f8fafc", fontSize: "1.15rem", fontWeight: 700, margin: "0 0 8px 0" }}>
+              Achievements & Badges
+            </h3>
+            <p style={{ color: "#94a3b8", fontSize: "0.9rem", margin: 0, lineHeight: 1.5 }}>
+              Unlock combat achievements, maintain daily problem-solving streaks, and level up your arena rank tier.
+            </p>
+          </div>
+
+          <div className="arena-card" style={{ padding: "24px" }}>
+            <div className="stat-icon-wrap stat-icon-amber" style={{ marginBottom: "16px" }}>
+              <Palette size={22} />
+            </div>
+            <h3 style={{ color: "#f8fafc", fontSize: "1.15rem", fontWeight: 700, margin: "0 0 8px 0" }}>
+              Dynamic Color Combos
+            </h3>
+            <p style={{ color: "#94a3b8", fontSize: "0.9rem", margin: 0, lineHeight: 1.5 }}>
+              Switch between Cyber Neon, Emerald Matrix, Solar Flare, Abyssal Arctic, and Synthwave color palettes.
             </p>
           </div>
         </div>

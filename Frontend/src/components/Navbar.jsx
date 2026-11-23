@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { Swords, LogOut, Zap, LogIn, UserPlus, ShieldAlert } from "lucide-react";
+import ThemeSwitcher from "./ThemeSwitcher";
+import { Swords, LogOut, Zap, LogIn, UserPlus, ShieldAlert, Sparkles } from "lucide-react";
 import "../styles/Navbar.css";
 
 function Navbar() {
@@ -41,6 +42,7 @@ function Navbar() {
         <Link to="/challenges">Challenges</Link>
         <Link to="/leaderboard">Leaderboard</Link>
         <Link to="/statistics">Statistics</Link>
+
         {isAdmin && (
           <Link to="/admin/dashboard" style={{ color: "#d946ef", fontWeight: 700 }}>
             Admin Panel
@@ -49,6 +51,8 @@ function Navbar() {
       </div>
 
       <div className="navbar-user">
+        <ThemeSwitcher variant="navbar" />
+
         {isAuthenticated && user ? (
           <>
             {isAdmin && (

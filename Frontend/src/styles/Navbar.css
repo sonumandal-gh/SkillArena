@@ -6,12 +6,14 @@
   justify-content: space-between;
   padding: 0 30px;
   box-sizing: border-box;
-  background-color: #0f172a;
+  background-color: var(--arena-bg, #0f172a);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: background-color 0.3s ease;
 }
 
 /* Logo */
@@ -26,12 +28,13 @@
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: var(--arena-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 14px var(--arena-glow-color, rgba(99, 102, 241, 0.4));
+  transition: all 0.3s ease;
 }
 
 .navbar-logo h2 {
@@ -105,13 +108,14 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  background: var(--arena-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-size: 12px;
   font-weight: 700;
+  transition: all 0.3s ease;
 }
 
 .user-name {
@@ -176,7 +180,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  background: var(--arena-gradient);
   border: none;
   border-radius: 8px;
   color: white;
@@ -184,13 +188,13 @@
   font-size: 14px;
   font-weight: 600;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 2px 8px var(--arena-glow-color, rgba(99, 102, 241, 0.35));
 }
 
 .navbar-signup-btn:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%);
+  filter: brightness(1.15);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 14px var(--arena-glow-color, rgba(99, 102, 241, 0.5));
 }
 
 /* Mobile & Tablet Responsiveness */

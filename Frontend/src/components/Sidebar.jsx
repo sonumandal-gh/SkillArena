@@ -93,6 +93,8 @@ function Sidebar() {
           <span>Profile</span>
         </NavLink>
 
+
+
         {isAdmin && (
           <>
             <div className="sidebar-section-title" style={{ marginTop: "20px" }}>

@@ -1,0 +1,221 @@
+/* ==========================================================================
+   SkillArena Interactive Theme & Color Combinations
+   ========================================================================== */
+
+/* Theme Palette Selector Floating / Docked */
+.theme-switcher-container {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+}
+
+/* Navbar Trigger Pill */
+.theme-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--arena-card-border);
+  border-radius: 9999px;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-trigger-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--arena-primary);
+  box-shadow: 0 0 16px var(--arena-glow-color, rgba(99, 102, 241, 0.3));
+  transform: translateY(-1px);
+}
+
+.theme-color-dots {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.theme-color-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* Floating Action Button (FAB) variant */
+.theme-floating-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--arena-card-bg);
+  border: 2px solid var(--arena-primary);
+  color: var(--arena-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--arena-glow-color, rgba(99, 102, 241, 0.4));
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.theme-floating-fab:hover {
+  transform: scale(1.1) rotate(20deg);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5), 0 0 30px var(--arena-glow-color, rgba(99, 102, 241, 0.6));
+}
+
+.theme-floating-fab:active {
+  transform: scale(0.95);
+}
+
+/* Palette Dropdown Modal / Popover */
+.theme-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 320px;
+  background: var(--arena-surface);
+  border: 1px solid var(--arena-card-border);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--arena-glow-color, rgba(99, 102, 241, 0.25));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 1050;
+  animation: themeMenuPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.theme-dropdown-menu.floating-position {
+  top: auto;
+  bottom: 70px;
+  right: 0;
+}
+
+@keyframes themeMenuPop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.theme-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.theme-menu-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-menu-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--arena-primary);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  border: 1px solid var(--arena-card-border);
+}
+
+.theme-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.theme-option-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-option-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateX(4px);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.theme-option-card.active {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--arena-primary);
+  box-shadow: 0 0 16px var(--arena-glow-color, rgba(99, 102, 241, 0.25));
+}
+
+.theme-option-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-swatch-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-option-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.theme-option-name {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.theme-option-desc {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+
+.theme-palette-preview {
+  display: flex;
+  gap: 4px;
+}
+
+.theme-palette-circle {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.theme-check-icon {
+  color: var(--arena-primary);
+  filter: drop-shadow(0 0 6px var(--arena-glow-color, #6366f1));
+}
