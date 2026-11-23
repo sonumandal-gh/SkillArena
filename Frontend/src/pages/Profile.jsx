@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import userService from "../services/userService";
 import "../styles/Arena.css";
+import "../styles/Profile.css";
 import {
   Mail,
   Shield,
@@ -16,12 +17,32 @@ import {
   AlertCircle,
   ShieldAlert,
   Palette,
+  User,
+  Calendar,
+  Lock,
+  Eye,
+  EyeOff,
+  Trophy,
+  Crown,
+  Check,
+  Sparkles,
 } from "lucide-react";
+
+const TIERS = [
+  { name: "Bronze Gladiator", minXp: 0, maxXp: 300, icon: Shield, color: "#cd7f32" },
+  { name: "Silver Codebreaker", minXp: 300, maxXp: 800, icon: Target, color: "#94a3b8" },
+  { name: "Gold Strategist", minXp: 800, maxXp: 1600, icon: Trophy, color: "#f59e0b" },
+  { name: "Platinum Algorithmist", minXp: 1600, maxXp: 3000, icon: Crown, color: "#06b6d4" },
+  { name: "Diamond Grandmaster", minXp: 3000, maxXp: 10000, icon: Sparkles, color: "#a855f7" },
+];
 
 const Profile = () => {
   const { user, logout, refreshUser } = useAuth();
   const { themeId, changeTheme, presets, activeTheme } = useTheme();
   const navigate = useNavigate();
+
+  // Active Tab: 'account' | 'security' | 'appearance'
+  const [activeTab, setActiveTab] = useState("account");
 
   // Edit Name State
   const [nameInput, setNameInput] = useState(user?.name || "");
@@ -33,6 +54,8 @@ const Profile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -52,13 +75,62 @@ const Profile = () => {
       .slice(0, 2);
   };
 
+  // Tier & XP calculations
+  const currentTier = useMemo(() => {
+    const xp = user?.xp || 0;
+    for (let i = TIERS.length - 1; i >= 0; i--) {
+      if (xp >= TIERS[i].minXp) {
+        return TIERS[i];
+      }
+    }
+    return TIERS[0];
+  }, [user?.xp]);
+
+  const nextTier = useMemo(() => {
+    const currentIndex = TIERS.findIndex((t) => t.name === currentTier.name);
+    if (currentIndex < TIERS.length - 1) {
+      return TIERS[currentIndex + 1];
+    }
+    return null;
+  }, [currentTier]);
+
+  const progressPercent = useMemo(() => {
+    const xp = user?.xp || 0;
+    if (!nextTier) return 100;
+    const range = nextTier.minXp - currentTier.minXp;
+    const progress = xp - currentTier.minXp;
+    return Math.min(100, Math.max(0, Math.round((progress / range) * 100)));
+  }, [user?.xp, currentTier, nextTier]);
+
+  // Password strength calculation
+  const passwordStrength = useMemo(() => {
+    if (!newPassword) return { score: 0, label: "None", class: "" };
+    let score = 0;
+    if (newPassword.length >= 6) score += 1;
+    if (newPassword.length >= 10) score += 1;
+    if (/[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword)) score += 1;
+    if (/[0-9]/.test(newPassword) && /[^A-Za-z0-9]/.test(newPassword)) score += 1;
+
+    switch (score) {
+      case 1:
+        return { score: 1, label: "Weak", class: "weak" };
+      case 2:
+        return { score: 2, label: "Fair", class: "fair" };
+      case 3:
+        return { score: 3, label: "Good", class: "good" };
+      case 4:
+      default:
+        return { score: 4, label: "Strong", class: "strong" };
+    }
+  }, [newPassword]);
+
   const handleUpdateName = async (e) => {
     e.preventDefault();
     setNameError("");
     setNameSuccess("");
 
     if (!nameInput.trim()) {
-      setNameError("Name cannot be blank.");
+      setNameError("Full name cannot be left blank.");
       return;
     }
 
@@ -67,8 +139,9 @@ const Profile = () => {
       await userService.updateProfile({ name: nameInput.trim() });
       await refreshUser();
       setNameSuccess("Profile name updated successfully!");
+      setTimeout(() => setNameSuccess(""), 4000);
     } catch (err) {
-      setNameError(err?.response?.data?.message || "Failed to update profile.");
+      setNameError(err?.response?.data?.message || "Failed to update profile name.");
     } finally {
       setNameLoading(false);
     }
@@ -91,17 +164,17 @@ const Profile = () => {
 
     setPasswordLoading(true);
     try {
-      // If current password provided, call changePassword, otherwise setPassword (for OAuth users)
       if (currentPassword) {
         await userService.changePassword({ currentPassword, newPassword });
       } else {
         await userService.setPassword({ newPassword });
       }
 
-      setPasswordSuccess("Password updated successfully!");
+      setPasswordSuccess("Security credentials updated successfully!");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmNewPassword("");
+      setTimeout(() => setPasswordSuccess(""), 4000);
     } catch (err) {
       setPasswordError(err?.response?.data?.message || "Failed to change password.");
     } finally {
@@ -111,323 +184,468 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="arena-page" style={{ textAlign: "center", padding: "60px 20px" }}>
-        <p style={{ color: "#94a3b8" }}>No profile session loaded.</p>
+      <div className="profile-page-wrapper" style={{ textAlign: "center", padding: "80px 20px" }}>
+        <p style={{ color: "#94a3b8", fontSize: "1.1rem" }}>No active profile session found.</p>
       </div>
     );
   }
 
   const isAdmin = user.role === "admin";
+  const TierIcon = currentTier.icon;
 
   return (
-    <div className="arena-page" style={{ maxWidth: "880px" }}>
-      {/* Header Profile Card */}
-      <div
-        className="arena-card"
-        style={{
-          background: "linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: "20px",
-          marginBottom: "24px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <div
-            style={{
-              width: "72px",
-              height: "72px",
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontSize: "26px",
-              fontWeight: "800",
-              boxShadow: "0 0 24px rgba(99, 102, 241, 0.4)",
-            }}
-          >
-            {getInitials(user.name)}
+    <div className="profile-page-wrapper">
+      {/* Hero Header Card */}
+      <div className="profile-hero-card">
+        <div className="profile-hero-inner">
+          <div className="profile-hero-user-info">
+            <div className="profile-avatar-squircle">
+              <span>{getInitials(user.name)}</span>
+              <div className="profile-online-badge" title="Online & Active" />
+            </div>
+
+            <div className="profile-details-wrap">
+              <div className="profile-user-headline">
+                <h1 className="profile-display-name">{user.name}</h1>
+                <span className={`arena-badge ${isAdmin ? "badge-admin" : "badge-coding"}`}>
+                  <Shield size={12} />
+                  <span>{user.role ? user.role.toUpperCase() : "CODER"}</span>
+                </span>
+                <span className="profile-rank-badge" style={{ borderColor: currentTier.color, color: currentTier.color }}>
+                  <TierIcon size={12} />
+                  <span>{currentTier.name}</span>
+                </span>
+              </div>
+
+              <div className="profile-meta-pills">
+                <div className="profile-meta-pill-item">
+                  <Mail size={14} color="#818cf8" />
+                  <span>{user.email}</span>
+                </div>
+                <div className="profile-meta-pill-item">
+                  <Calendar size={14} color="#34d399" />
+                  <span>Active Competitor</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
-              <h1 style={{ margin: 0, fontSize: "1.7rem", color: "#f8fafc", fontWeight: 700 }}>
-                {user.name}
-              </h1>
-              <span className={`arena-badge ${isAdmin ? "badge-admin" : "badge-coding"}`}>
-                <Shield size={12} />
-                <span>{user.role || "user"}</span>
+          <div className="profile-hero-actions">
+            {isAdmin && (
+              <Link
+                to="/admin/users"
+                className="arena-btn"
+                style={{ background: "linear-gradient(135deg, #d946ef 0%, #9333ea 100%)" }}
+              >
+                <ShieldAlert size={16} />
+                <span>Admin Center</span>
+              </Link>
+            )}
+
+            <button
+              type="button"
+              className="arena-btn arena-btn-danger"
+              onClick={handleLogout}
+              title="Sign Out of Session"
+            >
+              <LogOut size={16} />
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main 2-Column Content Layout */}
+      <div className="profile-content-grid">
+        {/* Left Column: Player Level & Quick Stats */}
+        <div className="profile-sidebar-stack">
+          {/* Rank & Tier Progress Card */}
+          <div className="profile-rank-card">
+            <div className="profile-rank-header">
+              <div className="profile-rank-badge" style={{ borderColor: currentTier.color, color: currentTier.color }}>
+                <TierIcon size={13} />
+                <span>Tier Standing</span>
+              </div>
+              <span style={{ fontSize: "0.8rem", color: "#94a3b8", fontWeight: 600 }}>
+                {user.xp || 0} XP
               </span>
             </div>
 
-            <div style={{ color: "#94a3b8", fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "6px" }}>
-              <Mail size={15} />
-              <span>{user.email}</span>
-            </div>
-          </div>
-        </div>
-
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          {isAdmin && (
-            <Link to="/admin/users" className="arena-btn" style={{ background: "linear-gradient(135deg, #d946ef 0%, #9333ea 100%)" }}>
-              <ShieldAlert size={16} />
-              <span>Admin Center</span>
-            </Link>
-          )}
-
-          <button
-            type="button"
-            className="arena-btn arena-btn-danger"
-            onClick={handleLogout}
-          >
-            <LogOut size={16} />
-            <span>Sign Out</span>
-          </button>
-        </div>
-      </div>
-
-
-      {/* Stats Summary Grid */}
-      <div className="arena-stats-grid" style={{ marginBottom: "28px" }}>
-        <div className="arena-stat-card">
-          <div className="stat-icon-wrap stat-icon-amber">
-            <Zap size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-val">{user.xp || 0}</div>
-            <div className="stat-label">Experience Points</div>
-          </div>
-        </div>
-
-        <div className="arena-stat-card">
-          <div className="stat-icon-wrap stat-icon-emerald">
-            <CheckCircle2 size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-val">{user.problemsSolved || 0}</div>
-            <div className="stat-label">Problems Solved</div>
-          </div>
-        </div>
-
-        <div className="arena-stat-card">
-          <div className="stat-icon-wrap stat-icon-purple">
-            <Target size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-val">{user.accuracy || 0}%</div>
-            <div className="stat-label">Accuracy Rate</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Profile Settings (Name & Password) */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
-        
-        {/* Edit Name Card */}
-        <div className="arena-card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-            <h2 style={{ margin: 0, fontSize: "1.2rem", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
-              <Edit3 size={18} color="#818cf8" />
-              <span>Account Details</span>
-            </h2>
-          </div>
-
-          {nameSuccess && (
-            <div className="auth-alert auth-alert-success" style={{ marginBottom: "14px" }}>
-              <CheckCircle2 size={16} />
-              <span>{nameSuccess}</span>
-            </div>
-          )}
-
-          {nameError && (
-            <div className="auth-alert auth-alert-error" style={{ marginBottom: "14px" }}>
-              <AlertCircle size={16} />
-              <span>{nameError}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleUpdateName} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-            <div>
-              <label className="auth-input-label">Full Name</label>
-              <input
-                type="text"
-                className="auth-input"
-                style={{ paddingLeft: "14px" }}
-                value={nameInput}
-                onChange={(e) => setNameInput(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="auth-input-label">Email Address (Read-only)</label>
-              <input
-                type="email"
-                className="auth-input"
-                style={{ paddingLeft: "14px", opacity: 0.65, cursor: "not-allowed" }}
-                value={user.email}
-                disabled
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="arena-btn"
-              style={{ marginTop: "6px" }}
-              disabled={nameLoading}
-            >
-              {nameLoading ? "Saving Changes..." : "Save Account Name"}
-            </button>
-          </form>
-        </div>
-
-        {/* Change Password Card */}
-        <div className="arena-card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-            <h2 style={{ margin: 0, fontSize: "1.2rem", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
-              <KeyRound size={18} color="#f59e0b" />
-              <span>Security & Password</span>
-            </h2>
-          </div>
-
-          {passwordSuccess && (
-            <div className="auth-alert auth-alert-success" style={{ marginBottom: "14px" }}>
-              <CheckCircle2 size={16} />
-              <span>{passwordSuccess}</span>
-            </div>
-          )}
-
-          {passwordError && (
-            <div className="auth-alert auth-alert-error" style={{ marginBottom: "14px" }}>
-              <AlertCircle size={16} />
-              <span>{passwordError}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleChangePassword} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-            <div>
-              <label className="auth-input-label">Current Password (optional for OAuth)</label>
-              <input
-                type="password"
-                className="auth-input"
-                style={{ paddingLeft: "14px" }}
-                placeholder="Leave blank if setting first password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="auth-input-label">New Password</label>
-              <input
-                type="password"
-                className="auth-input"
-                style={{ paddingLeft: "14px" }}
-                placeholder="At least 6 characters"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="auth-input-label">Confirm New Password</label>
-              <input
-                type="password"
-                className="auth-input"
-                style={{ paddingLeft: "14px" }}
-                placeholder="Repeat new password"
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="arena-btn arena-btn-secondary"
-              style={{ marginTop: "6px" }}
-              disabled={passwordLoading}
-            >
-              {passwordLoading ? "Updating..." : "Update Password"}
-            </button>
-          </form>
-        </div>
-
-      </div>
-
-      {/* Theme & Color Combination Customizer Card */}
-      <div className="arena-card" style={{ marginTop: "24px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: "1.2rem", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
-              <Palette size={20} color={activeTheme.primary} />
-              <span>Arena Color Combinations & Visual Aesthetic</span>
-            </h2>
-            <p style={{ margin: "4px 0 0 0", color: "#94a3b8", fontSize: "0.88rem" }}>
-              Choose your personal theme preset. Dynamic glow, button gradients, and canvas particles synchronize instantly.
+            <h3 className="profile-tier-title">
+              <span>{currentTier.name}</span>
+            </h3>
+            <p className="profile-tier-subtitle">
+              {nextTier
+                ? `Earn ${nextTier.minXp - (user.xp || 0)} more XP to advance to ${nextTier.name}.`
+                : "You have conquered the highest competitive arena tier!"}
             </p>
-          </div>
-        </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "12px" }}>
-          {presets.map((preset) => {
-            const isSelected = preset.id === themeId;
-            return (
-              <div
-                key={preset.id}
-                onClick={() => changeTheme(preset.id)}
-                style={{
-                  padding: "14px",
-                  borderRadius: "14px",
-                  background: isSelected ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.03)",
-                  border: isSelected ? `2px solid ${preset.primary}` : "1px solid rgba(255, 255, 255, 0.1)",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  transition: "all 0.2s ease",
-                  boxShadow: isSelected ? `0 0 16px ${preset.glow}` : "none",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div
-                    style={{
-                      width: "36px",
-                      height: "36px",
-                      borderRadius: "10px",
-                      background: preset.gradient,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "16px",
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
-                    }}
-                  >
-                    {preset.icon}
+            <div className="profile-xp-meter-box">
+              <div className="profile-xp-meter-labels">
+                <span>Progress to Next Tier</span>
+                <span>{progressPercent}%</span>
+              </div>
+              <div className="profile-xp-meter-bar-bg">
+                <div className="profile-xp-meter-bar-fill" style={{ width: `${progressPercent}%` }} />
+              </div>
+            </div>
+
+            {/* Quick Stats Mini Grid */}
+            <div className="profile-stats-mini-grid">
+              <div className="profile-stat-mini-card">
+                <div className="profile-stat-mini-left">
+                  <div className="profile-stat-icon-squircle stat-icon-amber">
+                    <Zap size={18} />
                   </div>
                   <div>
-                    <div style={{ color: "#f8fafc", fontWeight: 700, fontSize: "0.9rem" }}>
-                      {preset.name}
-                    </div>
-                    <div style={{ color: "#94a3b8", fontSize: "0.74rem" }}>
-                      {preset.subtitle}
-                    </div>
+                    <div className="profile-stat-mini-label">Experience Points</div>
+                    <div className="profile-stat-mini-val">{user.xp || 0} XP</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="profile-stat-mini-card">
+                <div className="profile-stat-mini-left">
+                  <div className="profile-stat-icon-squircle stat-icon-emerald">
+                    <CheckCircle2 size={18} />
+                  </div>
+                  <div>
+                    <div className="profile-stat-mini-label">Problems Conquered</div>
+                    <div className="profile-stat-mini-val">{user.problemsSolved || 0} Solved</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="profile-stat-mini-card">
+                <div className="profile-stat-mini-left">
+                  <div className="profile-stat-icon-squircle stat-icon-cyan">
+                    <Target size={18} />
+                  </div>
+                  <div>
+                    <div className="profile-stat-mini-label">Accuracy Rate</div>
+                    <div className="profile-stat-mini-val">{user.accuracy || 0}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Settings Tabs & Panels */}
+        <div className="profile-main-panel">
+          {/* Tab Navigation Buttons */}
+          <div className="profile-tabs-header">
+            <button
+              type="button"
+              className={`profile-tab-button ${activeTab === "account" ? "active" : ""}`}
+              onClick={() => setActiveTab("account")}
+            >
+              <User size={16} />
+              <span>Account Details</span>
+            </button>
+
+            <button
+              type="button"
+              className={`profile-tab-button ${activeTab === "security" ? "active" : ""}`}
+              onClick={() => setActiveTab("security")}
+            >
+              <KeyRound size={16} />
+              <span>Security & Password</span>
+            </button>
+
+            <button
+              type="button"
+              className={`profile-tab-button ${activeTab === "appearance" ? "active" : ""}`}
+              onClick={() => setActiveTab("appearance")}
+            >
+              <Palette size={16} />
+              <span>Color Themes</span>
+            </button>
+          </div>
+
+          {/* Tab 1: Account Details */}
+          {activeTab === "account" && (
+            <div className="profile-tab-content-card">
+              <div className="profile-card-title-row">
+                <div>
+                  <h2 className="profile-card-heading">
+                    <Edit3 size={20} color="#818cf8" />
+                    <span>Personal Information</span>
+                  </h2>
+                  <p className="profile-card-subheading">
+                    Update your public screen name and review your account credentials.
+                  </p>
+                </div>
+              </div>
+
+              {nameSuccess && (
+                <div className="profile-alert-box profile-alert-success">
+                  <CheckCircle2 size={18} />
+                  <span>{nameSuccess}</span>
+                </div>
+              )}
+
+              {nameError && (
+                <div className="profile-alert-box profile-alert-error">
+                  <AlertCircle size={18} />
+                  <span>{nameError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleUpdateName}>
+                <div className="profile-form-group">
+                  <label className="profile-label">
+                    <span>Full Display Name</span>
+                    <span style={{ color: "#94a3b8", fontSize: "0.78rem" }}>Visible to competitors</span>
+                  </label>
+                  <div className="profile-input-wrapper">
+                    <span className="profile-input-icon">
+                      <User size={18} />
+                    </span>
+                    <input
+                      type="text"
+                      className="profile-input"
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
+                      placeholder="Enter your name"
+                      required
+                    />
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: "4px" }}>
-                  <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.primary }} />
-                  <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.accent }} />
-                  <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.secondary }} />
+                <div className="profile-form-group">
+                  <label className="profile-label">
+                    <span>Email Address</span>
+                    <span style={{ color: "#10b981", fontSize: "0.78rem", display: "flex", alignItems: "center", gap: "4px" }}>
+                      <Check size={12} />
+                      Verified
+                    </span>
+                  </label>
+                  <div className="profile-input-wrapper">
+                    <span className="profile-input-icon">
+                      <Mail size={18} />
+                    </span>
+                    <input
+                      type="email"
+                      className="profile-input disabled"
+                      value={user.email}
+                      disabled
+                    />
+                    <span style={{ position: "absolute", right: "14px", color: "#64748b" }}>
+                      <Lock size={16} />
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
+                  <button
+                    type="submit"
+                    className="arena-btn"
+                    disabled={nameLoading}
+                  >
+                    <CheckCircle2 size={16} />
+                    <span>{nameLoading ? "Saving Changes..." : "Save Name"}</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Tab 2: Security & Password */}
+          {activeTab === "security" && (
+            <div className="profile-tab-content-card">
+              <div className="profile-card-title-row">
+                <div>
+                  <h2 className="profile-card-heading">
+                    <KeyRound size={20} color="#f59e0b" />
+                    <span>Security & Password Management</span>
+                  </h2>
+                  <p className="profile-card-subheading">
+                    Ensure your account is protected with a strong, multi-character password.
+                  </p>
                 </div>
               </div>
-            );
-          })}
+
+              {passwordSuccess && (
+                <div className="profile-alert-box profile-alert-success">
+                  <CheckCircle2 size={18} />
+                  <span>{passwordSuccess}</span>
+                </div>
+              )}
+
+              {passwordError && (
+                <div className="profile-alert-box profile-alert-error">
+                  <AlertCircle size={18} />
+                  <span>{passwordError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleChangePassword}>
+                <div className="profile-form-group">
+                  <label className="profile-label">
+                    <span>Current Password</span>
+                    <span style={{ color: "#94a3b8", fontSize: "0.78rem" }}>Optional for Google sign-in</span>
+                  </label>
+                  <div className="profile-input-wrapper">
+                    <span className="profile-input-icon">
+                      <Lock size={18} />
+                    </span>
+                    <input
+                      type={showCurrentPassword ? "text" : "password"}
+                      className="profile-input"
+                      placeholder="Enter current password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="profile-password-toggle-btn"
+                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    >
+                      {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="profile-form-group">
+                  <label className="profile-label">
+                    <span>New Password</span>
+                    <span style={{ color: "#94a3b8", fontSize: "0.78rem" }}>Minimum 6 characters</span>
+                  </label>
+                  <div className="profile-input-wrapper">
+                    <span className="profile-input-icon">
+                      <KeyRound size={18} />
+                    </span>
+                    <input
+                      type={showNewPassword ? "text" : "password"}
+                      className="profile-input"
+                      placeholder="Create a strong password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="profile-password-toggle-btn"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+
+                  {newPassword && (
+                    <div className="profile-strength-bar-wrap">
+                      <div className="profile-strength-labels">
+                        <span>Strength:</span>
+                        <span style={{ fontWeight: 700 }}>{passwordStrength.label}</span>
+                      </div>
+                      <div className="profile-strength-segments">
+                        <div className={`profile-strength-seg ${passwordStrength.score >= 1 ? passwordStrength.class : ""}`} />
+                        <div className={`profile-strength-seg ${passwordStrength.score >= 2 ? passwordStrength.class : ""}`} />
+                        <div className={`profile-strength-seg ${passwordStrength.score >= 3 ? passwordStrength.class : ""}`} />
+                        <div className={`profile-strength-seg ${passwordStrength.score >= 4 ? passwordStrength.class : ""}`} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="profile-form-group">
+                  <label className="profile-label">
+                    <span>Confirm New Password</span>
+                    {confirmNewPassword && (
+                      <span style={{
+                        fontSize: "0.78rem",
+                        color: newPassword === confirmNewPassword ? "#10b981" : "#f43f5e",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px"
+                      }}>
+                        {newPassword === confirmNewPassword ? "Passwords match" : "Does not match"}
+                      </span>
+                    )}
+                  </label>
+                  <div className="profile-input-wrapper">
+                    <span className="profile-input-icon">
+                      <Lock size={18} />
+                    </span>
+                    <input
+                      type={showNewPassword ? "text" : "password"}
+                      className="profile-input"
+                      placeholder="Repeat new password"
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
+                  <button
+                    type="submit"
+                    className="arena-btn arena-btn-secondary"
+                    disabled={passwordLoading}
+                  >
+                    <CheckCircle2 size={16} />
+                    <span>{passwordLoading ? "Updating..." : "Update Password"}</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Tab 3: Themes & Appearance */}
+          {activeTab === "appearance" && (
+            <div className="profile-tab-content-card">
+              <div className="profile-card-title-row">
+                <div>
+                  <h2 className="profile-card-heading">
+                    <Palette size={20} color={activeTheme.primary} />
+                    <span>Visual Aesthetic & Theme Presets</span>
+                  </h2>
+                  <p className="profile-card-subheading">
+                    Select your favorite theme preset. Accents, glows, and buttons update across the entire arena in real time.
+                  </p>
+                </div>
+              </div>
+
+              <div className="profile-themes-grid">
+                {presets.map((preset) => {
+                  const isSelected = preset.id === themeId;
+                  return (
+                    <div
+                      key={preset.id}
+                      className={`profile-theme-preset-card ${isSelected ? "selected" : ""}`}
+                      onClick={() => changeTheme(preset.id)}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <div
+                          className="profile-theme-icon-badge"
+                          style={{ background: preset.gradient }}
+                        >
+                          {preset.icon}
+                        </div>
+                        <div>
+                          <div style={{ color: "#f8fafc", fontWeight: 700, fontSize: "0.92rem", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <span>{preset.name}</span>
+                            {isSelected && <Check size={14} color={preset.primary} />}
+                          </div>
+                          <div style={{ color: "#94a3b8", fontSize: "0.76rem" }}>
+                            {preset.subtitle}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.primary }} />
+                        <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.accent }} />
+                        <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.secondary }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
