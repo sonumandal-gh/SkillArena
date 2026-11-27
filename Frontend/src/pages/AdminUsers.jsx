@@ -132,15 +132,15 @@ const AdminUsers = () => {
 
       {/* Users Table */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px 20px", color: "#94a3b8" }}>
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b" }}>
           <div className="auth-spinner" style={{ width: "32px", height: "32px", margin: "0 auto 12px auto" }} />
           <p>Loading users...</p>
         </div>
       ) : usersList.length === 0 ? (
         <div className="arena-card arena-empty-state">
-          <User size={48} className="arena-empty-icon" />
-          <h2>No users found</h2>
-          <p>No user accounts matched your search criteria.</p>
+          <ShieldAlert size={48} className="arena-empty-icon" />
+          <h2 style={{ color: "#0f172a" }}>No users found</h2>
+          <p>No user accounts matched your search.</p>
         </div>
       ) : (
         <div className="arena-table-wrap">
@@ -163,7 +163,7 @@ const AdminUsers = () => {
                   <tr key={u._id}>
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <span style={{ fontWeight: 600, color: "#f8fafc" }}>
+                        <span style={{ fontWeight: 600, color: "#0f172a" }}>
                           {u.name}
                         </span>
                         {isCurrentSelf && (
@@ -174,7 +174,7 @@ const AdminUsers = () => {
                       </div>
                     </td>
 
-                    <td style={{ color: "#94a3b8", fontSize: "0.88rem" }}>
+                    <td style={{ color: "#64748b", fontSize: "0.88rem" }}>
                       {u.email}
                     </td>
 
@@ -187,16 +187,16 @@ const AdminUsers = () => {
 
                     <td>
                       <span className="arena-badge badge-xp">
-                        <Zap size={11} color="#fbbf24" />
+                        <Zap size={11} color="#d97706" />
                         <span>{u.xp || 0} XP</span>
                       </span>
                     </td>
 
-                    <td style={{ color: "#e2e8f0", fontWeight: 600 }}>
+                    <td style={{ color: "#0f172a", fontWeight: 600 }}>
                       {u.problemsSolved || 0}
                     </td>
 
-                    <td style={{ color: "#94a3b8" }}>
+                    <td style={{ color: "#64748b" }}>
                       {u.accuracy || 0}%
                     </td>
 

@@ -255,7 +255,7 @@ const ChallengeDetail = () => {
     return (
       <div className="arena-page" style={{ textAlign: "center", padding: "80px 20px" }}>
         <div className="auth-spinner" style={{ width: "36px", height: "36px", margin: "0 auto 16px auto" }} />
-        <p style={{ color: "#94a3b8" }}>Loading arena workspace...</p>
+        <p style={{ color: "#64748b", fontWeight: 600 }}>Loading arena workspace...</p>
       </div>
     );
   }
@@ -265,7 +265,7 @@ const ChallengeDetail = () => {
       <div className="arena-page">
         <div className="arena-card arena-empty-state">
           <AlertCircle size={48} color="#f43f5e" style={{ margin: "0 auto 12px auto" }} />
-          <h2>Challenge Not Found</h2>
+          <h2 style={{ color: "#0f172a" }}>Challenge Not Found</h2>
           <p>{error || "Could not find the requested challenge."}</p>
           <Link to="/challenges" className="arena-btn" style={{ marginTop: "16px" }}>
             <ArrowLeft size={16} />
@@ -280,7 +280,7 @@ const ChallengeDetail = () => {
     <div className="arena-page">
       {/* Top Breadcrumb & Actions */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <Link to="/challenges" style={{ color: "#94a3b8", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px", fontSize: "0.9rem", fontWeight: 500 }}>
+        <Link to="/challenges" style={{ color: "#64748b", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px", fontSize: "0.9rem", fontWeight: 600 }}>
           <ArrowLeft size={16} />
           <span>Back to Challenges</span>
         </Link>
@@ -294,7 +294,7 @@ const ChallengeDetail = () => {
             {challenge.difficulty}
           </span>
           <span className="arena-badge badge-xp">
-            <Zap size={12} color="#fbbf24" />
+            <Zap size={12} color="#d97706" />
             <span>+{challenge.points || 10} XP</span>
           </span>
         </div>
@@ -308,10 +308,10 @@ const ChallengeDetail = () => {
               <div style={{ fontSize: "0.82rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase", marginBottom: "6px" }}>
                 {challenge.category} • MULTIPLE CHOICE QUIZ
               </div>
-              <h1 style={{ margin: "0 0 14px 0", fontSize: "1.65rem", color: "#f8fafc", fontWeight: 800 }}>
+              <h1 style={{ margin: "0 0 14px 0", fontSize: "1.65rem", color: "#0f172a", fontWeight: 800 }}>
                 {challenge.title}
               </h1>
-              <p style={{ margin: 0, color: "#cbd5e1", fontSize: "1.05rem", lineHeight: 1.6 }}>
+              <p style={{ margin: 0, color: "#475569", fontSize: "1.05rem", lineHeight: 1.6 }}>
                 {challenge.description}
               </p>
             </div>
@@ -462,18 +462,18 @@ const ChallengeDetail = () => {
               <div style={{ fontSize: "0.8rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase", marginBottom: "6px" }}>
                 {challenge.category} • CODING CHALLENGE
               </div>
-              <h1 style={{ margin: "0 0 12px 0", fontSize: "1.5rem", color: "#f8fafc", fontWeight: 800 }}>
+              <h1 style={{ margin: "0 0 12px 0", fontSize: "1.5rem", color: "#0f172a", fontWeight: 800 }}>
                 {challenge.title}
               </h1>
-              <p style={{ margin: "0 0 20px 0", color: "#cbd5e1", fontSize: "0.95rem", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+              <p style={{ margin: "0 0 20px 0", color: "#475569", fontSize: "0.95rem", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
                 {challenge.description}
               </p>
 
               {/* Function Spec */}
               {challenge.functionName && (
-                <div style={{ background: "rgba(15, 23, 42, 0.7)", padding: "12px 14px", borderRadius: "10px", border: "1px solid rgba(255, 255, 255, 0.06)", marginBottom: "18px" }}>
+                <div style={{ background: "#f8fafc", padding: "12px 14px", borderRadius: "10px", border: "1px solid #e2e8f0", marginBottom: "18px" }}>
                   <div style={{ fontSize: "0.78rem", color: "#64748b", fontWeight: 600 }}>TARGET FUNCTION</div>
-                  <code style={{ color: "#a5b4fc", fontSize: "0.9rem", fontWeight: 600 }}>
+                  <code style={{ color: "#6366f1", fontSize: "0.9rem", fontWeight: 600 }}>
                     {challenge.functionName}(...)
                   </code>
                 </div>
@@ -481,7 +481,7 @@ const ChallengeDetail = () => {
 
               {/* Example Test Cases */}
               <div style={{ marginTop: "16px" }}>
-                <h3 style={{ margin: "0 0 12px 0", fontSize: "1rem", color: "#f8fafc" }}>
+                <h3 style={{ margin: "0 0 12px 0", fontSize: "1rem", color: "#0f172a" }}>
                   Example Test Cases
                 </h3>
                 {challenge.testCases?.map((tc, idx) => (
@@ -544,10 +544,11 @@ const ChallengeDetail = () => {
                     className="arena-btn"
                     style={{
                       padding: "8px 16px",
-                      background: "rgba(6, 182, 212, 0.15)",
-                      border: "1px solid rgba(6, 182, 212, 0.35)",
-                      color: "#67e8f9",
-                      boxShadow: "none"
+                      background: "rgba(6, 182, 212, 0.2)",
+                      border: "1px solid rgba(6, 182, 212, 0.5)",
+                      color: "#06b6d4",
+                      boxShadow: "none",
+                      fontWeight: 700,
                     }}
                     onClick={handleRunCode}
                     disabled={codeRunning || codeSubmitting}
@@ -614,7 +615,7 @@ const ChallengeDetail = () => {
             {codeResult && (
               <div className="results-panel">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px", flexWrap: "wrap", gap: "8px" }}>
-                  <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#0f172a", display: "flex", alignItems: "center", gap: "8px" }}>
                     <span>{codeResult.isRunOnly ? "Test Run Verdict:" : "Submission Verdict:"}</span>
                     <span
                       className={`arena-badge ${
@@ -654,7 +655,7 @@ const ChallengeDetail = () => {
                   </h3>
                 </div>
 
-                <div style={{ color: "#94a3b8", fontSize: "0.9rem", marginBottom: "12px" }}>
+                <div style={{ color: "#64748b", fontSize: "0.9rem", marginBottom: "12px" }}>
                   {codeResult.message}
                 </div>
 
@@ -672,7 +673,7 @@ const ChallengeDetail = () => {
                         }}
                       >
                         <div className="test-case-header">
-                          <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#f8fafc" }}>
+                          <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0f172a" }}>
                             Test Case #{i + 1}
                           </span>
                           <span

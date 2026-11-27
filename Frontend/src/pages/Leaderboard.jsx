@@ -105,9 +105,10 @@ const Leaderboard = () => {
         <div
           className="arena-card"
           style={{
-            background: "linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(17, 24, 39, 0.8) 100%)",
-            border: "1px solid rgba(99, 102, 241, 0.3)",
-            padding: "16px 24px",
+            background: "linear-gradient(135deg, rgba(236, 72, 153, 0.06) 0%, rgba(139, 92, 246, 0.12) 100%)",
+            border: "1.5px solid rgba(139, 92, 246, 0.3)",
+            boxShadow: "0 8px 24px rgba(139, 92, 246, 0.08)",
+            padding: "18px 24px",
             marginBottom: "28px",
             display: "flex",
             justifyContent: "space-between",
@@ -122,31 +123,32 @@ const Leaderboard = () => {
                 width: "44px",
                 height: "44px",
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+                background: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "white",
                 fontWeight: 800,
                 fontSize: "1.1rem",
+                boxShadow: "0 4px 12px rgba(236, 72, 153, 0.3)",
               }}
             >
               #{myRank.rank}
             </div>
             <div>
-              <div style={{ color: "#f8fafc", fontWeight: 700, fontSize: "1.05rem" }}>
+              <div style={{ color: "#0f172a", fontWeight: 700, fontSize: "1.05rem" }}>
                 Your Standing: #{myRank.rank} {myRank.name}
               </div>
-              <div style={{ color: "#94a3b8", fontSize: "0.85rem" }}>
-                Keep solving challenges to surpass fellow arena coders!
+              <div style={{ color: "#64748b", fontSize: "0.85rem" }}>
+                Keep solving challenges to climb higher in the arena ranks!
               </div>
             </div>
           </div>
 
           <div style={{ display: "flex", gap: "20px" }}>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: "0.78rem", color: "#64748b", fontWeight: 600 }}>CURRENT XP</div>
-              <div style={{ fontSize: "1.25rem", fontWeight: 800, color: "#fbbf24" }}>{myRank.xp} XP</div>
+              <div style={{ fontSize: "0.78rem", color: "#64748b", fontWeight: 700 }}>CURRENT XP</div>
+              <div style={{ fontSize: "1.35rem", fontWeight: 800, color: "#d97706" }}>{myRank.xp} XP</div>
             </div>
           </div>
         </div>
@@ -209,14 +211,14 @@ const Leaderboard = () => {
 
       {/* Leaderboard Table */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px 20px", color: "#94a3b8" }}>
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b" }}>
           <div className="auth-spinner" style={{ width: "32px", height: "32px", margin: "0 auto 12px auto" }} />
           <p>Loading rankings...</p>
         </div>
       ) : leaderboard.length === 0 ? (
         <div className="arena-card arena-empty-state">
           <Trophy size={48} className="arena-empty-icon" />
-          <h2>No rankings found</h2>
+          <h2 style={{ color: "#0f172a" }}>No rankings found</h2>
           <p>No players matched your search criteria.</p>
         </div>
       ) : (
@@ -259,7 +261,7 @@ const Leaderboard = () => {
                           {getInitials(player.name)}
                         </div>
                         <div>
-                          <span style={{ fontWeight: 600, color: isMe ? "#a5b4fc" : "#f8fafc" }}>
+                          <span style={{ fontWeight: 600, color: isMe ? "#7c3aed" : "#0f172a" }}>
                             {player.name}
                           </span>
                           {isMe && (
@@ -273,18 +275,18 @@ const Leaderboard = () => {
 
                     <td>
                       <span className="arena-badge badge-xp">
-                        <Zap size={12} color="#fbbf24" />
+                        <Zap size={12} color="#d97706" />
                         <span>{player.xp} XP</span>
                       </span>
                     </td>
 
-                    <td style={{ color: "#e2e8f0", fontWeight: 600 }}>
+                    <td style={{ color: "#0f172a", fontWeight: 600 }}>
                       {player.problemsSolved || 0}
                     </td>
 
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <div style={{ width: "100px", height: "6px", background: "rgba(255,255,255,0.08)", borderRadius: "4px", overflow: "hidden" }}>
+                        <div style={{ width: "100px", height: "6px", background: "#f1f5f9", borderRadius: "4px", overflow: "hidden" }}>
                           <div
                             style={{
                               width: `${player.accuracy || 0}%`,
@@ -299,7 +301,7 @@ const Leaderboard = () => {
                             }}
                           />
                         </div>
-                        <span style={{ fontSize: "0.85rem", color: "#94a3b8", fontWeight: 600 }}>
+                        <span style={{ fontSize: "0.85rem", color: "#475569", fontWeight: 600 }}>
                           {player.accuracy || 0}%
                         </span>
                       </div>
@@ -315,7 +317,7 @@ const Leaderboard = () => {
       {/* Pagination Controls */}
       {!searchTerm && totalPages > 1 && (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "24px" }}>
-          <div style={{ fontSize: "0.85rem", color: "#94a3b8" }}>
+          <div style={{ fontSize: "0.85rem", color: "#64748b" }}>
             Showing page {page} of {totalPages} ({totalUsers} total players)
           </div>
 

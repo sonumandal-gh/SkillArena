@@ -1,26 +1,33 @@
+/* ==========================================================================
+   SkillArena Unified Cinematic Sidebar (Sidebar.css)
+   ========================================================================== */
+
 .sidebar {
-  width: 240px;
-  min-height: calc(100vh - 70px);
-  padding: 24px 16px;
+  width: 250px;
+  min-height: calc(100vh - 72px);
+  padding: 28px 16px;
   box-sizing: border-box;
-  background-color: #0d1322;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  border-right: 1px solid rgba(226, 232, 240, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: sticky;
-  top: 70px;
-  height: calc(100vh - 70px);
+  top: 72px;
+  height: calc(100vh - 72px);
   overflow-y: auto;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 2px 0 12px rgba(15, 23, 42, 0.02);
 }
 
 .sidebar-section-title {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #64748b;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 0 12px 10px 12px;
+  padding: 0 14px 10px 14px;
 }
 
 .sidebar-menu {
@@ -33,126 +40,79 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
-  color: #94a3b8;
+  padding: 11px 16px;
+  color: #64748b;
   text-decoration: none;
   font-size: 0.92rem;
-  font-weight: 500;
-  border-radius: 10px;
-  transition: all 0.18s ease;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
 }
 
 .sidebar-link:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #f8fafc;
+  background-color: rgba(15, 23, 42, 0.04);
+  color: #0f172a;
+  transform: translateX(3px);
 }
 
 .sidebar-link.active {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  font-weight: 600;
-  border-color: var(--arena-primary);
-  box-shadow: 0 0 14px var(--arena-glow-color, rgba(99, 102, 241, 0.2));
+  background: #ffffff;
+  color: #7c3aed;
+  font-weight: 700;
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.12), 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
 .sidebar-link.admin-link {
-  color: #f0abfc;
+  color: #c026d3;
 }
 
 .sidebar-link.admin-link.active {
-  background: rgba(217, 70, 239, 0.15);
+  background: rgba(217, 70, 239, 0.1);
   border-color: rgba(217, 70, 239, 0.35);
-  color: #f5d0fe;
+  color: #a21caf;
 }
 
 .sidebar-arena-pro {
   margin-top: 24px;
-  padding: 16px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid var(--arena-primary);
-  border-radius: 14px;
-  box-shadow: 0 0 16px var(--arena-glow-color, rgba(99, 102, 241, 0.15));
+  padding: 18px;
+  background: linear-gradient(145deg, rgba(236, 72, 153, 0.06) 0%, rgba(139, 92, 246, 0.09) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.08);
 }
 
 .pro-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  color: #ffffff;
   font-size: 0.72rem;
   font-weight: 800;
-  color: #fff;
-  background: var(--arena-gradient);
-  padding: 3px 8px;
-  border-radius: 6px;
-  margin-bottom: 6px;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
 }
 
 .pro-text {
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: #f8fafc;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
 }
 
 .pro-xp {
   font-size: 0.78rem;
-  color: #fbbf24;
-  font-weight: 700;
-  margin-top: 4px;
+  color: #64748b;
+  font-weight: 500;
 }
 
-/* Mobile Horizontal Scrollable Navigation Bar */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .sidebar {
-    width: 100%;
-    height: auto;
-    min-height: unset;
-    padding: 8px 12px;
-    position: sticky;
-    top: 60px;
-    z-index: 45;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background-color: #0b101d;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  .sidebar-section-title {
-    display: none;
-  }
-
-  .sidebar-menu {
-    flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    width: 100%;
-    padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .sidebar-menu::-webkit-scrollbar {
-    height: 3px;
-  }
-
-  .sidebar-menu::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.4);
-    border-radius: 3px;
-  }
-
-  .sidebar-link {
-    padding: 8px 12px;
-    font-size: 0.82rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-    border-radius: 8px;
-    gap: 8px;
-  }
-
-  .sidebar-arena-pro {
     display: none;
   }
 }

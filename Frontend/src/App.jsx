@@ -7,7 +7,6 @@ import { ProtectedRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import ThemeSwitcher from "./components/ThemeSwitcher";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -31,15 +30,17 @@ function AppContent() {
     location.pathname === "/login" ||
     location.pathname === "/register" ||
     location.pathname === "/oauth-success";
+  const isLandingRoute = location.pathname === "/";
+  const showSidebar = !isAuthRoute && !isLandingRoute;
 
   return (
     <div className="app">
       <Navbar />
 
       <div className="app-body">
-        {!isAuthRoute && <Sidebar />}
+        {showSidebar && <Sidebar />}
 
-        <main className={isAuthRoute ? "auth-main-content" : "main-content"}>
+        <main className={isLandingRoute ? "landing-main-content" : isAuthRoute ? "auth-main-content" : "main-content"}>
           <Routes>
             {/* Public Home Landing Page */}
             <Route path="/" element={<Home />} />
@@ -150,9 +151,6 @@ function AppContent() {
           </Routes>
         </main>
       </div>
-
-      {/* Persistent Floating Color Theme Switcher */}
-      <ThemeSwitcher variant="floating" />
     </div>
   );
 }

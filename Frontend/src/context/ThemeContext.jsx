@@ -2,6 +2,28 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 export const THEME_PRESETS = [
   {
+    id: "cinematic",
+    name: "Cinematic Iris",
+    subtitle: "Vibrant Violet, Magenta & Cyan",
+    icon: "✨",
+    primary: "#8b5cf6",
+    accent: "#ec4899",
+    secondary: "#3b82f6",
+    rose: "#f43f5e",
+    amber: "#f59e0b",
+    emerald: "#10b981",
+    bg: "#f1f5f9",
+    surface: "#ffffff",
+    cardBg: "#ffffff",
+    cardBorder: "rgba(226, 232, 240, 0.9)",
+    glow: "rgba(139, 92, 246, 0.25)",
+    gradient: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%)",
+    threePrimary: 0xec4899,
+    threeAccent: 0x8b5cf6,
+    threeSecondary: 0x3b82f6,
+    threeParticles: 0xa855f7,
+  },
+  {
     id: "cyber",
     name: "Cyber Neon",
     subtitle: "Electric Indigo & Violet Glow",
@@ -12,13 +34,12 @@ export const THEME_PRESETS = [
     rose: "#f43f5e",
     amber: "#f59e0b",
     emerald: "#10b981",
-    bg: "#090d16",
-    surface: "#0f172a",
-    cardBg: "rgba(17, 24, 39, 0.82)",
-    cardBorder: "rgba(99, 102, 241, 0.22)",
-    glow: "rgba(99, 102, 241, 0.45)",
+    bg: "#f1f5f9",
+    surface: "#ffffff",
+    cardBg: "#ffffff",
+    cardBorder: "rgba(226, 232, 240, 0.9)",
+    glow: "rgba(99, 102, 241, 0.25)",
     gradient: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%)",
-    // 3D Canvas Colors
     threePrimary: 0x6366f1,
     threeAccent: 0xa855f7,
     threeSecondary: 0x06b6d4,
@@ -27,7 +48,7 @@ export const THEME_PRESETS = [
   {
     id: "matrix",
     name: "Emerald Matrix",
-    subtitle: "Cyberpunk Terminal Green & Teal",
+    subtitle: "Vibrant Terminal Green & Teal",
     icon: "🟢",
     primary: "#10b981",
     accent: "#06b6d4",
@@ -35,11 +56,11 @@ export const THEME_PRESETS = [
     rose: "#fb7185",
     amber: "#fbbf24",
     emerald: "#34d399",
-    bg: "#04100b",
-    surface: "#081d15",
-    cardBg: "rgba(8, 29, 21, 0.85)",
-    cardBorder: "rgba(16, 185, 129, 0.25)",
-    glow: "rgba(16, 185, 129, 0.45)",
+    bg: "#f1f5f9",
+    surface: "#ffffff",
+    cardBg: "#ffffff",
+    cardBorder: "rgba(226, 232, 240, 0.9)",
+    glow: "rgba(16, 185, 129, 0.25)",
     gradient: "linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)",
     threePrimary: 0x10b981,
     threeAccent: 0x06b6d4,
@@ -57,11 +78,11 @@ export const THEME_PRESETS = [
     rose: "#e11d48",
     amber: "#fbbf24",
     emerald: "#10b981",
-    bg: "#140a08",
-    surface: "#20110d",
-    cardBg: "rgba(32, 17, 13, 0.85)",
-    cardBorder: "rgba(245, 158, 11, 0.28)",
-    glow: "rgba(245, 158, 11, 0.45)",
+    bg: "#f1f5f9",
+    surface: "#ffffff",
+    cardBg: "#ffffff",
+    cardBorder: "rgba(226, 232, 240, 0.9)",
+    glow: "rgba(245, 158, 11, 0.25)",
     gradient: "linear-gradient(135deg, #ea580c 0%, #f59e0b 50%, #f43f5e 100%)",
     threePrimary: 0xf59e0b,
     threeAccent: 0xf43f5e,
@@ -79,11 +100,11 @@ export const THEME_PRESETS = [
     rose: "#f43f5e",
     amber: "#f59e0b",
     emerald: "#10b981",
-    bg: "#050f1c",
-    surface: "#0a192e",
-    cardBg: "rgba(10, 25, 46, 0.85)",
-    cardBorder: "rgba(6, 182, 212, 0.26)",
-    glow: "rgba(6, 182, 212, 0.45)",
+    bg: "#f1f5f9",
+    surface: "#ffffff",
+    cardBg: "#ffffff",
+    cardBorder: "rgba(226, 232, 240, 0.9)",
+    glow: "rgba(6, 182, 212, 0.25)",
     gradient: "linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #3b82f6 100%)",
     threePrimary: 0x06b6d4,
     threeAccent: 0x3b82f6,
@@ -101,11 +122,11 @@ export const THEME_PRESETS = [
     rose: "#f43f5e",
     amber: "#fbbf24",
     emerald: "#10b981",
-    bg: "#11071c",
-    surface: "#1e0f31",
-    cardBg: "rgba(30, 15, 49, 0.85)",
-    cardBorder: "rgba(217, 70, 239, 0.28)",
-    glow: "rgba(217, 70, 239, 0.45)",
+    bg: "#f1f5f9",
+    surface: "#ffffff",
+    cardBg: "#ffffff",
+    cardBorder: "rgba(226, 232, 240, 0.9)",
+    glow: "rgba(217, 70, 239, 0.25)",
     gradient: "linear-gradient(135deg, #c026d3 0%, #ec4899 50%, #8b5cf6 100%)",
     threePrimary: 0xd946ef,
     threeAccent: 0xec4899,
@@ -123,11 +144,11 @@ export const THEME_PRESETS = [
     rose: "#f43f5e",
     amber: "#fde047",
     emerald: "#10b981",
-    bg: "#120e05",
-    surface: "#1f180a",
-    cardBg: "rgba(31, 24, 10, 0.85)",
-    cardBorder: "rgba(234, 179, 8, 0.28)",
-    glow: "rgba(234, 179, 8, 0.45)",
+    bg: "#f1f5f9",
+    surface: "#ffffff",
+    cardBg: "#ffffff",
+    cardBorder: "rgba(226, 232, 240, 0.9)",
+    glow: "rgba(234, 179, 8, 0.25)",
     gradient: "linear-gradient(135deg, #ca8a04 0%, #eab308 50%, #f59e0b 100%)",
     threePrimary: 0xeab308,
     threeAccent: 0xf97316,
@@ -140,7 +161,7 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [themeId, setThemeId] = useState(() => {
-    return localStorage.getItem("skillarena_theme_id") || "cyber";
+    return localStorage.getItem("skillarena_theme_id") || "cinematic";
   });
 
   const activeTheme =
@@ -165,7 +186,7 @@ export const ThemeProvider = ({ children }) => {
     root.style.setProperty("--theme-accent", activeTheme.accent);
     root.style.setProperty("--theme-secondary", activeTheme.secondary);
 
-    // Also update body background
+    // Keep body background consistent with the soft-grey cinematic theme
     document.body.style.backgroundColor = activeTheme.bg;
   }, [themeId, activeTheme]);
 

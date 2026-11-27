@@ -78,10 +78,10 @@ const AdminDashboard = () => {
             <ShieldAlert size={14} />
             <span>ADMINISTRATION CONTROL CENTER</span>
           </div>
-          <h1 style={{ margin: "0 0 6px 0", fontSize: "1.8rem", fontWeight: 800, color: "#f8fafc" }}>
+          <h1 style={{ margin: "0 0 6px 0", fontSize: "1.8rem", fontWeight: 800, color: "#0f172a" }}>
             Admin Dashboard
           </h1>
-          <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.95rem" }}>
+          <p style={{ margin: 0, color: "#64748b", fontSize: "0.95rem" }}>
             Manage arena users, configure challenges, and monitor platform performance.
           </p>
         </div>
@@ -141,12 +141,12 @@ const AdminDashboard = () => {
 
       {/* Quick Actions Section */}
       <div className="arena-card" style={{ marginBottom: "32px", padding: "24px" }}>
-        <div style={{ marginBottom: "18px", borderBottom: "1px solid rgba(255, 255, 255, 0.08)", paddingBottom: "12px" }}>
-          <h2 style={{ margin: 0, fontSize: "1.3rem", fontWeight: 700, color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
-            <Zap size={20} color="#f59e0b" />
+        <div style={{ marginBottom: "18px", borderBottom: "1px solid #f1f5f9", paddingBottom: "12px" }}>
+          <h2 style={{ margin: 0, fontSize: "1.3rem", fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: "8px" }}>
+            <Zap size={20} color="#d97706" />
             <span>Quick Actions</span>
           </h2>
-          <p style={{ margin: "4px 0 0 0", color: "#94a3b8", fontSize: "0.88rem" }}>
+          <p style={{ margin: "4px 0 0 0", color: "#64748b", fontSize: "0.88rem" }}>
             Perform immediate administrative management operations.
           </p>
         </div>
@@ -156,8 +156,8 @@ const AdminDashboard = () => {
           <div
             style={{
               padding: "20px",
-              background: "rgba(15, 23, 42, 0.7)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
+              background: "#f8fafc",
+              border: "1px solid #e2e8f0",
               borderRadius: "14px",
               display: "flex",
               flexDirection: "column",
@@ -170,11 +170,11 @@ const AdminDashboard = () => {
                 <div className="stat-icon-wrap stat-icon-cyan" style={{ width: "36px", height: "36px" }}>
                   <Users size={18} />
                 </div>
-                <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#f8fafc", fontWeight: 700 }}>
+                <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#0f172a", fontWeight: 700 }}>
                   Manage Users
                 </h3>
               </div>
-              <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.88rem", lineHeight: 1.5 }}>
+              <p style={{ margin: 0, color: "#64748b", fontSize: "0.88rem", lineHeight: 1.5 }}>
                 View registered members, promote/demote admin roles, or delete user accounts.
               </p>
             </div>
@@ -188,7 +188,7 @@ const AdminDashboard = () => {
                 background: "linear-gradient(135deg, #0284c7 0%, #2563eb 100%)",
               }}
             >
-              <span>[ Manage Users ]</span>
+              <span>Manage Users</span>
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -197,8 +197,8 @@ const AdminDashboard = () => {
           <div
             style={{
               padding: "20px",
-              background: "rgba(15, 23, 42, 0.7)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
+              background: "#f8fafc",
+              border: "1px solid #e2e8f0",
               borderRadius: "14px",
               display: "flex",
               flexDirection: "column",
@@ -211,11 +211,11 @@ const AdminDashboard = () => {
                 <div className="stat-icon-wrap stat-icon-purple" style={{ width: "36px", height: "36px" }}>
                   <Code2 size={18} />
                 </div>
-                <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#f8fafc", fontWeight: 700 }}>
+                <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#0f172a", fontWeight: 700 }}>
                   Manage Challenges
                 </h3>
               </div>
-              <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.88rem", lineHeight: 1.5 }}>
+              <p style={{ margin: 0, color: "#64748b", fontSize: "0.88rem", lineHeight: 1.5 }}>
                 Create new coding/MCQ problems, modify existing test cases, or delete challenges.
               </p>
             </div>
@@ -229,7 +229,7 @@ const AdminDashboard = () => {
                 background: "linear-gradient(135deg, #9333ea 0%, #c084fc 100%)",
               }}
             >
-              <span>[ Manage Challenges ]</span>
+              <span>Manage Challenges</span>
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -238,29 +238,29 @@ const AdminDashboard = () => {
 
       {/* System Status Overview */}
       <div className="arena-card">
-        <h3 style={{ margin: "0 0 14px 0", fontSize: "1.1rem", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
-          <Settings size={18} color="#94a3b8" />
+        <h3 style={{ margin: "0 0 14px 0", fontSize: "1.1rem", color: "#0f172a", display: "flex", alignItems: "center", gap: "8px" }}>
+          <Settings size={18} color="#64748b" />
           <span>System Environment Status</span>
         </h3>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
-          <div style={{ padding: "12px 14px", background: "rgba(15, 23, 42, 0.6)", borderRadius: "10px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+          <div style={{ padding: "12px 14px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
             <span style={{ fontSize: "0.78rem", color: "#64748b", display: "block" }}>Database Status</span>
-            <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "#10b981", display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "#059669", display: "flex", alignItems: "center", gap: "6px" }}>
               <CheckCircle2 size={14} /> MongoDB Atlas Connected
             </span>
           </div>
 
-          <div style={{ padding: "12px 14px", background: "rgba(15, 23, 42, 0.6)", borderRadius: "10px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+          <div style={{ padding: "12px 14px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
             <span style={{ fontSize: "0.78rem", color: "#64748b", display: "block" }}>Judge Engine</span>
-            <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "#10b981", display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "#059669", display: "flex", alignItems: "center", gap: "6px" }}>
               <CheckCircle2 size={14} /> Active (Judge0 API)
             </span>
           </div>
 
-          <div style={{ padding: "12px 14px", background: "rgba(15, 23, 42, 0.6)", borderRadius: "10px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+          <div style={{ padding: "12px 14px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
             <span style={{ fontSize: "0.78rem", color: "#64748b", display: "block" }}>Active Admin Role</span>
-            <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "#f472b6", display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ fontSize: "0.92rem", fontWeight: 600, color: "#db2777", display: "flex", alignItems: "center", gap: "6px" }}>
               <Shield size={14} /> {user?.name} ({totalAdmins} Total Admins)
             </span>
           </div>

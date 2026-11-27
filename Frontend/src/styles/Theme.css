@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SkillArena Interactive Theme & Color Combinations
+   SkillArena Interactive Theme & Color Combinations (Theme.css)
    ========================================================================== */
 
 /* Theme Palette Selector Floating / Docked */
@@ -14,22 +14,22 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--arena-card-border);
+  padding: 6px 14px;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 9999px;
-  color: #e2e8f0;
+  color: #0f172a;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
 .theme-trigger-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
   border-color: var(--arena-primary);
-  box-shadow: 0 0 16px var(--arena-glow-color, rgba(99, 102, 241, 0.3));
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
   transform: translateY(-1px);
 }
 
@@ -52,23 +52,23 @@
   bottom: 24px;
   right: 24px;
   z-index: 1000;
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: var(--arena-card-bg);
-  border: 2px solid var(--arena-primary);
+  background: #ffffff;
+  border: 1.5px solid var(--arena-primary);
   color: var(--arena-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--arena-glow-color, rgba(99, 102, 241, 0.4));
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12), 0 0 15px rgba(139, 92, 246, 0.2);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .theme-floating-fab:hover {
-  transform: scale(1.1) rotate(20deg);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5), 0 0 30px var(--arena-glow-color, rgba(99, 102, 241, 0.6));
+  transform: scale(1.08) rotate(15deg);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18), 0 0 20px rgba(139, 92, 246, 0.35);
 }
 
 .theme-floating-fab:active {
@@ -81,11 +81,11 @@
   top: calc(100% + 10px);
   right: 0;
   width: 320px;
-  background: var(--arena-surface);
-  border: 1px solid var(--arena-card-border);
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 18px;
   padding: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--arena-glow-color, rgba(99, 102, 241, 0.25));
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.04);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 1050;
@@ -101,7 +101,7 @@
 @keyframes themeMenuPop {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.96);
+    transform: translateY(-8px) scale(0.96);
   }
   to {
     opacity: 1;
@@ -113,109 +113,108 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 12px;
 }
 
 .theme-menu-title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #f8fafc;
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.theme-menu-badge {
-  font-size: 0.7rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  color: var(--arena-primary);
-  background: rgba(255, 255, 255, 0.06);
-  padding: 2px 8px;
-  border-radius: 9999px;
-  border: 1px solid var(--arena-card-border);
+  color: #0f172a;
 }
 
-.theme-options-list {
+.theme-close-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.theme-close-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.theme-presets-grid {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
-.theme-option-card {
+.theme-preset-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid transparent;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.theme-option-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-  transform: translateX(4px);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.theme-option-card.active {
-  background: rgba(255, 255, 255, 0.09);
+.theme-preset-card:hover {
+  background: #f1f5f9;
   border-color: var(--arena-primary);
-  box-shadow: 0 0 16px var(--arena-glow-color, rgba(99, 102, 241, 0.25));
+  transform: translateX(2px);
 }
 
-.theme-option-left {
+.theme-preset-card.active {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: var(--arena-primary);
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.15);
+}
+
+.theme-preset-left {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.theme-swatch-box {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
+.theme-preset-icon {
+  font-size: 1.1rem;
 }
 
-.theme-option-text {
+.theme-preset-info {
   display: flex;
   flex-direction: column;
 }
 
-.theme-option-name {
-  font-size: 0.86rem;
+.theme-preset-name {
+  font-size: 0.88rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #0f172a;
 }
 
-.theme-option-desc {
+.theme-preset-sub {
   font-size: 0.72rem;
-  color: #94a3b8;
-  margin-top: 1px;
+  color: #64748b;
 }
 
-.theme-palette-preview {
+.theme-preset-right {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 10px;
 }
 
-.theme-palette-circle {
-  width: 11px;
-  height: 11px;
+.theme-preset-palette {
+  display: flex;
+  gap: 3px;
+}
+
+.theme-swatch {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-}
-
-.theme-check-icon {
-  color: var(--arena-primary);
-  filter: drop-shadow(0 0 6px var(--arena-glow-color, #6366f1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }

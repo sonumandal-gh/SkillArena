@@ -1,0 +1,621 @@
+/* ==========================================================================
+   SkillArena – Premium Cinematic Editorial Design System (CinematicHome.css)
+   ========================================================================== */
+
+/* Outer Canvas - Soft Grey & Off-White Background */
+.cinematic-outer-canvas {
+  background-color: #f1f5f9;
+  background-image: 
+    radial-gradient(at 10% 15%, rgba(236, 72, 153, 0.04) 0px, transparent 50%),
+    radial-gradient(at 90% 85%, rgba(6, 182, 212, 0.04) 0px, transparent 50%);
+  min-height: 100vh;
+  padding: 32px 24px 64px;
+  color: #0f172a;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .cinematic-outer-canvas {
+    padding: 16px 12px 40px;
+  }
+}
+
+/* White Website Presentation Frame */
+.cinematic-presentation-frame {
+  max-width: 1320px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 32px;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 
+    0 25px 60px -15px rgba(15, 23, 42, 0.08),
+    0 10px 20px -8px rgba(15, 23, 42, 0.04),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle Dotted Grid Background */
+.cinematic-dotted-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, #cbd5e1 1.15px, transparent 1.15px);
+  background-size: 28px 28px;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cinematic-frame-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.cinematic-hero-section {
+  position: relative;
+  padding: 80px 32px 40px;
+  text-align: center;
+  overflow: visible;
+}
+
+@media (max-width: 768px) {
+  .cinematic-hero-section {
+    padding: 48px 16px 32px;
+  }
+}
+
+/* Editorial Pill Badge */
+.cinematic-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+.cinematic-hero-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  box-shadow: 0 0 8px rgba(236, 72, 153, 0.8);
+}
+
+/* Large Elegant Headline */
+.cinematic-hero-headline {
+  font-size: clamp(2.8rem, 6.2vw, 5.6rem);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #0f172a;
+  margin: 0 auto 20px;
+  max-width: 980px;
+  text-transform: uppercase;
+}
+
+.cinematic-gradient-text {
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.cinematic-hero-subtext {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  color: #64748b;
+  max-width: 720px;
+  margin: 0 auto 36px;
+  line-height: 1.6;
+  font-weight: 450;
+}
+
+/* Hero CTA Row */
+.cinematic-hero-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 10;
+}
+
+.cinematic-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 9999px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 24px -6px rgba(15, 23, 42, 0.3);
+}
+
+.cinematic-btn-primary:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.4);
+}
+
+.cinematic-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #cbd5e1;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.cinematic-btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   3D Ribbon Stage & Floating UI Composition
+   ========================================================================== */
+.cinematic-ribbon-stage {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .cinematic-ribbon-stage {
+    height: 380px;
+  }
+}
+
+/* Floating Elements around Ribbon */
+.cinematic-float-card {
+  position: absolute;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
+  pointer-events: auto;
+  transition: transform 0.3s ease;
+}
+
+.cinematic-float-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Floating Card Positions & Bobbing Animations */
+.float-card-code {
+  top: 15%;
+  left: 6%;
+  width: 250px;
+  animation: floatBob1 6s ease-in-out infinite;
+}
+
+.float-card-xp {
+  top: 18%;
+  right: 8%;
+  animation: floatBob2 7s ease-in-out infinite;
+}
+
+.float-card-problem {
+  bottom: 22%;
+  left: 8%;
+  animation: floatBob3 6.5s ease-in-out infinite;
+}
+
+.float-card-streak {
+  bottom: 18%;
+  right: 7%;
+  animation: floatBob1 7.5s ease-in-out infinite;
+}
+
+@media (max-width: 900px) {
+  .float-card-code,
+  .float-card-problem {
+    left: 2%;
+    transform: scale(0.85);
+  }
+  .float-card-xp,
+  .float-card-streak {
+    right: 2%;
+    transform: scale(0.85);
+  }
+}
+
+@media (max-width: 640px) {
+  .cinematic-float-card {
+    display: none;
+  }
+}
+
+@keyframes floatBob1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(1deg); }
+}
+
+@keyframes floatBob2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(14px) rotate(-1.5deg); }
+}
+
+@keyframes floatBob3 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-1deg); }
+}
+
+/* ==========================================================================
+   3D Product Showcase & Isometric Coding Workspace
+   ========================================================================== */
+.cinematic-showcase-section {
+  padding: 60px 32px 100px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  position: relative;
+}
+
+.cinematic-section-header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 50px;
+}
+
+.cinematic-section-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b5cf6;
+  margin-bottom: 12px;
+}
+
+.cinematic-section-title {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+  margin: 0 0 16px;
+  line-height: 1.15;
+}
+
+.cinematic-section-desc {
+  font-size: 1.05rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Isometric 3D Perspective Wrapper */
+.cinematic-perspective-wrapper {
+  perspective: 1600px;
+  max-width: 1080px;
+  margin: 0 auto 60px;
+}
+
+.cinematic-browser-frame {
+  background: #0b0f19;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 30px 80px -20px rgba(15, 23, 42, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  overflow: hidden;
+  transform: rotateX(8deg) rotateY(-4deg) rotateZ(1.5deg);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+}
+
+.cinematic-browser-frame:hover {
+  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  box-shadow: 0 40px 100px -20px rgba(15, 23, 42, 0.55);
+}
+
+/* Browser Chrome / Header */
+.cinematic-browser-chrome {
+  background: #111827;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cinematic-window-controls {
+  display: flex;
+  gap: 7px;
+}
+
+.cinematic-window-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #f59e0b; }
+.dot-green { background: #10b981; }
+
+.cinematic-browser-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.cinematic-tab-pill {
+  padding: 5px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.cinematic-tab-pill.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Coding Workspace Mockup Body */
+.cinematic-workspace-body {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  min-height: 440px;
+}
+
+@media (max-width: 860px) {
+  .cinematic-workspace-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cinematic-editor-pane {
+  background: #0b0f19;
+  padding: 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+}
+
+.cinematic-code-line {
+  display: flex;
+  gap: 16px;
+}
+
+.cinematic-line-number {
+  color: #475569;
+  user-select: none;
+  width: 22px;
+  text-align: right;
+}
+
+.cinematic-output-pane {
+  background: #0f172a;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cinematic-test-status-box {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+/* ==========================================================================
+   DSA Challenges & Platform Features Grid
+   ========================================================================== */
+.cinematic-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 80px;
+}
+
+.cinematic-feature-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cinematic-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.1);
+  border-color: #cbd5e1;
+}
+
+.cinematic-card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.icon-wrap-pink { background: rgba(236, 72, 153, 0.12); color: #ec4899; }
+.icon-wrap-purple { background: rgba(139, 92, 246, 0.12); color: #8b5cf6; }
+.icon-wrap-cyan { background: rgba(6, 182, 212, 0.12); color: #06b6d4; }
+.icon-wrap-amber { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+
+.cinematic-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 10px;
+}
+
+.cinematic-card-desc {
+  font-size: 0.92rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+/* ==========================================================================
+   Live Platform Statistics Strip
+   ========================================================================== */
+.cinematic-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 40px;
+  background: #f8fafc;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 80px;
+}
+
+@media (max-width: 860px) {
+  .cinematic-stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 24px;
+  }
+}
+
+.cinematic-stat-block {
+  text-align: center;
+}
+
+.cinematic-stat-number {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.cinematic-stat-caption {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   Interactive MCQ Practice Showcase
+   ========================================================================== */
+.cinematic-mcq-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.cinematic-mcq-option {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.cinematic-mcq-option:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.cinematic-mcq-option.correct {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+  color: #065f46;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Editorial Footer
+   ========================================================================== */
+.cinematic-footer {
+  padding: 60px 40px 40px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.cinematic-footer-brand h3 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.cinematic-footer-brand p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.cinematic-footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.cinematic-footer-link {
+  color: #475569;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.cinematic-footer-link:hover {
+  color: #8b5cf6;
+}

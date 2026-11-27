@@ -318,15 +318,15 @@ const AdminChallenges = () => {
 
       {/* Challenges List Table */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px 20px", color: "#94a3b8" }}>
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b" }}>
           <div className="auth-spinner" style={{ width: "32px", height: "32px", margin: "0 auto 12px auto" }} />
           <p>Loading challenges catalog...</p>
         </div>
       ) : challenges.length === 0 ? (
         <div className="arena-card arena-empty-state">
           <Code2 size={48} className="arena-empty-icon" />
-          <h2>No challenges found</h2>
-          <p>Try refining your search filter or click "Create Challenge" to add one.</p>
+          <h2 style={{ color: "#0f172a" }}>No challenges found</h2>
+          <p>Try refining your search filter or click &quot;Create Challenge&quot; to add one.</p>
         </div>
       ) : (
         <div className="arena-table-wrap">
@@ -345,10 +345,10 @@ const AdminChallenges = () => {
               {challenges.map((item) => (
                 <tr key={item._id}>
                   <td>
-                    <div style={{ fontWeight: 600, color: "#f8fafc", marginBottom: "4px" }}>
+                    <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: "4px" }}>
                       {item.title}
                     </div>
-                    <div style={{ fontSize: "0.82rem", color: "#94a3b8", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                    <div style={{ fontSize: "0.82rem", color: "#64748b", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                       {item.description}
                     </div>
                   </td>
@@ -360,7 +360,7 @@ const AdminChallenges = () => {
                     </span>
                   </td>
 
-                  <td style={{ color: "#e2e8f0" }}>{item.category || "General"}</td>
+                  <td style={{ color: "#0f172a", fontWeight: 500 }}>{item.category || "General"}</td>
 
                   <td>
                     <span className={`arena-badge badge-${item.difficulty || "easy"}`}>
@@ -454,7 +454,7 @@ const AdminChallenges = () => {
               <X size={20} />
             </button>
 
-            <h2 style={{ margin: "0 0 18px 0", color: "#f8fafc", fontSize: "1.3rem", fontWeight: 700 }}>
+            <h2 style={{ margin: "0 0 18px 0", color: "#0f172a", fontSize: "1.3rem", fontWeight: 700 }}>
               Create New Arena Challenge
             </h2>
 
@@ -731,7 +731,7 @@ const AdminChallenges = () => {
               <X size={20} />
             </button>
 
-            <h2 style={{ margin: "0 0 18px 0", color: "#f8fafc", fontSize: "1.3rem", fontWeight: 700 }}>
+            <h2 style={{ margin: "0 0 18px 0", color: "#0f172a", fontSize: "1.3rem", fontWeight: 700 }}>
               Edit Challenge: {editingChallenge.title}
             </h2>
 

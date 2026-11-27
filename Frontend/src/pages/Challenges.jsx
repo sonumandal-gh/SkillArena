@@ -302,14 +302,14 @@ const Challenges = () => {
 
       {/* Challenges Grid */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px 20px", color: "#94a3b8" }}>
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b" }}>
           <div className="auth-spinner" style={{ width: "32px", height: "32px", margin: "0 auto 12px auto" }} />
           <p>Loading arena challenges...</p>
         </div>
       ) : challenges.length === 0 ? (
         <div className="arena-card arena-empty-state">
           <Swords size={48} className="arena-empty-icon" />
-          <h2>No challenges found</h2>
+          <h2 style={{ color: "#0f172a" }}>No challenges found</h2>
           <p>Try adjusting your search query or filters.</p>
         </div>
       ) : (
@@ -322,7 +322,7 @@ const Challenges = () => {
                 key={challenge._id}
                 className="challenge-card"
                 style={{
-                  border: isSolved ? "1px solid rgba(16, 185, 129, 0.3)" : undefined,
+                  border: isSolved ? "1px solid rgba(16, 185, 129, 0.4)" : undefined,
                 }}
               >
                 <div>
@@ -356,7 +356,7 @@ const Challenges = () => {
                 <div className="challenge-card-footer">
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <span className="arena-badge badge-xp">
-                      <Zap size={12} color="#fbbf24" />
+                      <Zap size={12} color="#d97706" />
                       <span>+{challenge.points || 10} XP</span>
                     </span>
                     <span style={{ fontSize: "0.78rem", color: "#64748b" }}>
@@ -385,10 +385,11 @@ const Challenges = () => {
                           ? {
                               padding: "7px 16px",
                               fontSize: "0.85rem",
-                              background: "rgba(16, 185, 129, 0.15)",
-                              border: "1px solid rgba(16, 185, 129, 0.35)",
-                              color: "#6ee7b7",
+                              background: "rgba(16, 185, 129, 0.12)",
+                              border: "1px solid rgba(16, 185, 129, 0.4)",
+                              color: "#059669",
                               boxShadow: "none",
+                              fontWeight: 700,
                             }
                           : { padding: "7px 16px", fontSize: "0.85rem" }
                       }
@@ -670,7 +671,7 @@ const Challenges = () => {
                         <div key={idx} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
                           <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                             <div>
-                              <label style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "4px", display: "block" }}>
+                              <label style={{ fontSize: "11px", color: "#475569", marginBottom: "4px", display: "block", fontWeight: 600 }}>
                                 Test Case {idx + 1} Input
                               </label>
                               <input
@@ -688,7 +689,7 @@ const Challenges = () => {
                               />
                             </div>
                             <div>
-                              <label style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "4px", display: "block" }}>
+                              <label style={{ fontSize: "11px", color: "#475569", marginBottom: "4px", display: "block", fontWeight: 600 }}>
                                 Expected Output
                               </label>
                               <input

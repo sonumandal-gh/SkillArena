@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
 import userService from "../services/userService";
 import "../styles/Arena.css";
 import "../styles/Profile.css";
@@ -16,7 +15,6 @@ import {
   Edit3,
   AlertCircle,
   ShieldAlert,
-  Palette,
   User,
   Calendar,
   Lock,
@@ -38,10 +36,9 @@ const TIERS = [
 
 const Profile = () => {
   const { user, logout, refreshUser } = useAuth();
-  const { themeId, changeTheme, presets, activeTheme } = useTheme();
   const navigate = useNavigate();
 
-  // Active Tab: 'account' | 'security' | 'appearance'
+  // Active Tab: 'account' | 'security'
   const [activeTab, setActiveTab] = useState("account");
 
   // Edit Name State
@@ -266,7 +263,7 @@ const Profile = () => {
                 <TierIcon size={13} />
                 <span>Tier Standing</span>
               </div>
-              <span style={{ fontSize: "0.8rem", color: "#94a3b8", fontWeight: 600 }}>
+              <span style={{ fontSize: "0.8rem", color: "#64748b", fontWeight: 700 }}>
                 {user.xp || 0} XP
               </span>
             </div>
@@ -353,14 +350,6 @@ const Profile = () => {
               <span>Security & Password</span>
             </button>
 
-            <button
-              type="button"
-              className={`profile-tab-button ${activeTab === "appearance" ? "active" : ""}`}
-              onClick={() => setActiveTab("appearance")}
-            >
-              <Palette size={16} />
-              <span>Color Themes</span>
-            </button>
           </div>
 
           {/* Tab 1: Account Details */}
@@ -396,7 +385,7 @@ const Profile = () => {
                 <div className="profile-form-group">
                   <label className="profile-label">
                     <span>Full Display Name</span>
-                    <span style={{ color: "#94a3b8", fontSize: "0.78rem" }}>Visible to competitors</span>
+                    <span style={{ color: "#64748b", fontSize: "0.78rem" }}>Visible to competitors</span>
                   </label>
                   <div className="profile-input-wrapper">
                     <span className="profile-input-icon">
@@ -484,7 +473,7 @@ const Profile = () => {
                 <div className="profile-form-group">
                   <label className="profile-label">
                     <span>Current Password</span>
-                    <span style={{ color: "#94a3b8", fontSize: "0.78rem" }}>Optional for Google sign-in</span>
+                    <span style={{ color: "#64748b", fontSize: "0.78rem" }}>Optional for Google sign-in</span>
                   </label>
                   <div className="profile-input-wrapper">
                     <span className="profile-input-icon">
@@ -510,7 +499,7 @@ const Profile = () => {
                 <div className="profile-form-group">
                   <label className="profile-label">
                     <span>New Password</span>
-                    <span style={{ color: "#94a3b8", fontSize: "0.78rem" }}>Minimum 6 characters</span>
+                    <span style={{ color: "#64748b", fontSize: "0.78rem" }}>Minimum 6 characters</span>
                   </label>
                   <div className="profile-input-wrapper">
                     <span className="profile-input-icon">
@@ -536,7 +525,7 @@ const Profile = () => {
                   {newPassword && (
                     <div className="profile-strength-bar-wrap">
                       <div className="profile-strength-labels">
-                        <span>Strength:</span>
+                        <span style={{ color: "#64748b" }}>Strength:</span>
                         <span style={{ fontWeight: 700 }}>{passwordStrength.label}</span>
                       </div>
                       <div className="profile-strength-segments">
@@ -590,60 +579,6 @@ const Profile = () => {
                   </button>
                 </div>
               </form>
-            </div>
-          )}
-
-          {/* Tab 3: Themes & Appearance */}
-          {activeTab === "appearance" && (
-            <div className="profile-tab-content-card">
-              <div className="profile-card-title-row">
-                <div>
-                  <h2 className="profile-card-heading">
-                    <Palette size={20} color={activeTheme.primary} />
-                    <span>Visual Aesthetic & Theme Presets</span>
-                  </h2>
-                  <p className="profile-card-subheading">
-                    Select your favorite theme preset. Accents, glows, and buttons update across the entire arena in real time.
-                  </p>
-                </div>
-              </div>
-
-              <div className="profile-themes-grid">
-                {presets.map((preset) => {
-                  const isSelected = preset.id === themeId;
-                  return (
-                    <div
-                      key={preset.id}
-                      className={`profile-theme-preset-card ${isSelected ? "selected" : ""}`}
-                      onClick={() => changeTheme(preset.id)}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <div
-                          className="profile-theme-icon-badge"
-                          style={{ background: preset.gradient }}
-                        >
-                          {preset.icon}
-                        </div>
-                        <div>
-                          <div style={{ color: "#f8fafc", fontWeight: 700, fontSize: "0.92rem", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <span>{preset.name}</span>
-                            {isSelected && <Check size={14} color={preset.primary} />}
-                          </div>
-                          <div style={{ color: "#94a3b8", fontSize: "0.76rem" }}>
-                            {preset.subtitle}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{ display: "flex", gap: "4px" }}>
-                        <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.primary }} />
-                        <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.accent }} />
-                        <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: preset.secondary }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           )}
         </div>

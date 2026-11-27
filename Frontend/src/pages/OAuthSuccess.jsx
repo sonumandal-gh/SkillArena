@@ -62,19 +62,18 @@ const OAuthSuccess = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      color: "#f8fafc",
+      color: "#0f172a",
       textAlign: "center",
       padding: "20px"
     }}>
       <div style={{
-        background: "rgba(30, 41, 59, 0.8)",
-        backdropFilter: "blur(12px)",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
         borderRadius: "16px",
         padding: "40px",
         maxWidth: "420px",
         width: "100%",
-        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
+        boxShadow: "0 14px 35px -5px rgba(15, 23, 42, 0.08)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -85,15 +84,15 @@ const OAuthSuccess = () => {
             <div style={{
               width: "48px",
               height: "48px",
-              border: "3px solid #334155",
-              borderTopColor: "#6366f1",
+              border: "3px solid #e2e8f0",
+              borderTopColor: "#8b5cf6",
               borderRadius: "50%",
               animation: "spin 0.8s linear infinite"
             }} />
-            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600 }}>
+            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700, color: "#0f172a" }}>
               Connecting with Google...
             </h3>
-            <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.9rem" }}>
+            <p style={{ margin: 0, color: "#64748b", fontSize: "0.9rem" }}>
               Please wait while we establish your SkillArena session.
             </p>
           </>
@@ -102,10 +101,10 @@ const OAuthSuccess = () => {
         {status === "success" && (
           <>
             <CheckCircle2 size={48} color="#10b981" />
-            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600, color: "#10b981" }}>
+            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700, color: "#059669" }}>
               Authentication Successful!
             </h3>
-            <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.9rem" }}>
+            <p style={{ margin: 0, color: "#64748b", fontSize: "0.9rem" }}>
               Redirecting to your dashboard...
             </p>
           </>
@@ -114,10 +113,10 @@ const OAuthSuccess = () => {
         {status === "error" && (
           <>
             <AlertCircle size={48} color="#ef4444" />
-            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 600, color: "#ef4444" }}>
+            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700, color: "#e11d48" }}>
               Authentication Failed
             </h3>
-            <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.9rem" }}>
+            <p style={{ margin: 0, color: "#64748b", fontSize: "0.9rem" }}>
               {errorMessage}
             </p>
           </>
