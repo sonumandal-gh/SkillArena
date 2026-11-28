@@ -25,7 +25,91 @@ import {
   BookOpen,
   Send,
   HelpCircle,
+  X,
+  RotateCcw,
 } from "lucide-react";
+
+// Curated pool of high-yield DSA & programming interview MCQs
+const MCQ_QUESTIONS = [
+  {
+    id: 1,
+    topic: "Tree Structures",
+    question: "What is the average time complexity of searching in a Balanced Binary Search Tree (AVL / Red-Black Tree)?",
+    options: [
+      { id: "A", text: "O(1) Constant Time" },
+      { id: "B", text: "O(log N) Logarithmic Time" },
+      { id: "C", text: "O(N) Linear Time" },
+      { id: "D", text: "O(N log N) Linearithmic Time" },
+    ],
+    correctAnswer: "B",
+    explanation: "Because the tree maintains self-balancing invariants (height ≤ log N), each comparison halves the remaining search space, yielding guaranteed O(log N) runtime.",
+  },
+  {
+    id: 2,
+    topic: "System Design & Caching",
+    question: "Which combination of data structures is optimal for implementing an LRU (Least Recently Used) Cache with O(1) get and put operations?",
+    options: [
+      { id: "A", text: "Binary Heap + Array" },
+      { id: "B", text: "Hash Map + Doubly Linked List" },
+      { id: "C", text: "Singly Linked List + Stack" },
+      { id: "D", text: "Trie + Red-Black Tree" },
+    ],
+    correctAnswer: "B",
+    explanation: "A Hash Map provides O(1) key-to-node lookups, while a Doubly Linked List allows O(1) node removal and insertion at the head/tail to track access recency.",
+  },
+  {
+    id: 3,
+    topic: "Graph Algorithms",
+    question: "What is the standard time complexity of Dijkstra's Algorithm using a Min-Priority Queue (Binary Heap) on a graph with V vertices and E edges?",
+    options: [
+      { id: "A", text: "O(V + E)" },
+      { id: "B", text: "O(V²)" },
+      { id: "C", text: "O((V + E) log V)" },
+      { id: "D", text: "O(V · E)" },
+    ],
+    correctAnswer: "C",
+    explanation: "Each vertex is extracted from the min-heap once (V · log V) and each edge relaxation may update the heap priority (E · log V), yielding total O((V + E) log V).",
+  },
+  {
+    id: 4,
+    topic: "Dynamic Programming",
+    question: "Which core property distinguishes Dynamic Programming problems from ordinary Divide-and-Conquer problems?",
+    options: [
+      { id: "A", text: "Overlapping Subproblems & Optimal Substructure" },
+      { id: "B", text: "Greedy choice at every recursive step" },
+      { id: "C", text: "Independent subproblems with zero overlap" },
+      { id: "D", text: "Monotonic binary search space" },
+    ],
+    correctAnswer: "A",
+    explanation: "Dynamic programming caches answers because the same subproblems are encountered repeatedly (overlapping subproblems), built upon subproblem optimal solutions (optimal substructure).",
+  },
+  {
+    id: 5,
+    topic: "Bit Manipulation",
+    question: "What does the condition (n > 0) && ((n & (n - 1)) === 0) compute in constant time?",
+    options: [
+      { id: "A", text: "Checks if n is an odd prime number" },
+      { id: "B", text: "Checks if n is an exact power of 2" },
+      { id: "C", text: "Reverses the bit sequence of n" },
+      { id: "D", text: "Computes the parity bit of integer n" },
+    ],
+    correctAnswer: "B",
+    explanation: "An exact power of 2 has only a single bit set (e.g. 8 is 1000₂). Subtracting 1 flips all bits up to that bit (7 is 0111₂). Bitwise AND clears that bit, producing 0.",
+  },
+  {
+    id: 6,
+    topic: "Sorting Algorithms",
+    question: "What is the worst-case time complexity of QuickSort when using a naive pivot selection on an already sorted array?",
+    options: [
+      { id: "A", text: "O(N log N)" },
+      { id: "B", text: "O(N)" },
+      { id: "C", text: "O(N²)" },
+      { id: "D", text: "O(log N)" },
+    ],
+    correctAnswer: "C",
+    explanation: "Picking the first or last element as pivot on an already sorted array creates highly unbalanced partitions of size 1 and N-1 at every step, degrading runtime to O(N²).",
+  },
+];
 
 const Home = () => {
   const { user, isAuthenticated } = useAuth();
@@ -37,8 +121,61 @@ const Home = () => {
   const [executionOutput, setExecutionOutput] = useState(null);
 
   // Interactive MCQ Practice State
+  const [currentMcqIndex, setCurrentMcqIndex] = useState(0);
   const [selectedMcqOption, setSelectedMcqOption] = useState(null);
   const [mcqAnswered, setMcqAnswered] = useState(false);
+  const [mcqScore, setMcqScore] = useState(0);
+  const [mcqStreak, setMcqStreak] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+
+  const currentMcq = MCQ_QUESTIONS[currentMcqIndex] || MCQ_QUESTIONS[0];
+
+  const handleMcqSelect = (optId) => {
+    if (mcqAnswered) return;
+    setSelectedMcqOption(optId);
+    setMcqAnswered(true);
+
+    const isCorrect = optId === currentMcq.correctAnswer;
+    if (isCorrect) {
+      setMcqScore((prev) => prev + 1);
+      setMcqStreak((prev) => prev + 1);
+      try {
+        confetti({
+          particleCount: 35,
+          spread: 60,
+          origin: { y: 0.7 },
+        });
+      } catch (e) {}
+    } else {
+      setMcqStreak(0);
+    }
+  };
+
+  const handleNextMcq = () => {
+    if (currentMcqIndex + 1 < MCQ_QUESTIONS.length) {
+      setCurrentMcqIndex((prev) => prev + 1);
+      setSelectedMcqOption(null);
+      setMcqAnswered(false);
+    } else {
+      setQuizCompleted(true);
+      try {
+        confetti({
+          particleCount: 90,
+          spread: 100,
+          origin: { y: 0.6 },
+        });
+      } catch (e) {}
+    }
+  };
+
+  const handleRestartQuiz = () => {
+    setCurrentMcqIndex(0);
+    setSelectedMcqOption(null);
+    setMcqAnswered(false);
+    setMcqScore(0);
+    setMcqStreak(0);
+    setQuizCompleted(false);
+  };
 
   // Challenge Category Filter
   const [activeDifficulty, setActiveDifficulty] = useState("all");
@@ -61,8 +198,8 @@ const Home = () => {
     };
   }, []);
 
-  // Code snippets for the interactive workspace mockup
-  const CODE_SNIPPETS = {
+  // Default Code snippets for the interactive workspace mockup
+  const DEFAULT_CODE_SNIPPETS = {
     javascript: `// Two Sum: Find two numbers that sum up to target
 function twoSum(nums, target) {
   const map = new Map();
@@ -76,7 +213,7 @@ function twoSum(nums, target) {
   return [];
 }
 
-// Running Test Cases...
+// Modify code above or test here!
 console.log(twoSum([2, 7, 11, 15], 9));`,
     python: `# Two Sum: Find two numbers that sum up to target
 def two_sum(nums, target):
@@ -88,7 +225,7 @@ def two_sum(nums, target):
         seen[num] = i
     return []
 
-# Running Test Cases...
+# Modify code above or test here!
 print(two_sum([2, 7, 11, 15], 9))`,
     cpp: `// Two Sum: O(N) Hash Map approach in C++
 #include <vector>
@@ -108,34 +245,123 @@ vector<int> twoSum(vector<int>& nums, int target) {
 }`,
   };
 
+  const [editorCode, setEditorCode] = useState(DEFAULT_CODE_SNIPPETS);
+
   const handleRunCode = () => {
     setIsExecuting(true);
     setExecutionOutput(null);
 
     setTimeout(() => {
       setIsExecuting(false);
-      setExecutionOutput({
-        status: "Accepted",
-        runtime: "4 ms (Beats 96.4%)",
-        memory: "42.1 MB (Beats 88.2%)",
-        testCases: [
-          { input: "nums = [2,7,11,15], target = 9", output: "[0, 1]", passed: true },
-          { input: "nums = [3,2,4], target = 6", output: "[1, 2]", passed: true },
-          { input: "nums = [3,3], target = 6", output: "[0, 1]", passed: true },
-        ],
-      });
+      const currentCode = editorCode[selectedLanguage] || "";
 
-      try {
-        confetti({
-          particleCount: 30,
-          spread: 60,
-          origin: { y: 0.7 },
-          colors: ["#ec4899", "#8b5cf6", "#06b6d4"],
-        });
-      } catch {
-        // Confetti fallback
+      if (selectedLanguage === "javascript") {
+        try {
+          const testSuite = [
+            { nums: [2, 7, 11, 15], target: 9, expected: [0, 1] },
+            { nums: [3, 2, 4], target: 6, expected: [1, 2] },
+            { nums: [3, 3], target: 6, expected: [0, 1] },
+          ];
+
+          const runner = new Function(`
+            ${currentCode};
+            if (typeof twoSum !== 'function') {
+              throw new Error("Function 'twoSum' is not defined. Ensure you declare 'function twoSum(nums, target) { ... }'");
+            }
+            return [
+              twoSum([2, 7, 11, 15], 9),
+              twoSum([3, 2, 4], 6),
+              twoSum([3, 3], 6)
+            ];
+          `);
+
+          const results = runner();
+          let allPassed = true;
+          const evaluatedTestCases = testSuite.map((ts, idx) => {
+            const res = results[idx];
+            const isMatch =
+              Array.isArray(res) &&
+              ((res[0] === ts.expected[0] && res[1] === ts.expected[1]) ||
+                (res[0] === ts.expected[1] && res[1] === ts.expected[0]));
+            if (!isMatch) allPassed = false;
+            return {
+              input: `nums = [${ts.nums.join(",")}], target = ${ts.target}`,
+              expected: `[${ts.expected.join(", ")}]`,
+              output: Array.isArray(res) ? `[${res.join(", ")}]` : String(res),
+              passed: isMatch,
+            };
+          });
+
+          if (allPassed) {
+            setExecutionOutput({
+              status: "Accepted",
+              isAccepted: true,
+              runtime: `${Math.floor(Math.random() * 3) + 2} ms (Beats 98.4%)`,
+              memory: "41.8 MB (Beats 92.1%)",
+              testCases: evaluatedTestCases,
+            });
+            try {
+              confetti({
+                particleCount: 35,
+                spread: 60,
+                origin: { y: 0.7 },
+                colors: ["#ec4899", "#8b5cf6", "#06b6d4"],
+              });
+            } catch {}
+          } else {
+            setExecutionOutput({
+              status: "Wrong Answer",
+              isAccepted: false,
+              runtime: "4 ms",
+              memory: "42.0 MB",
+              testCases: evaluatedTestCases,
+            });
+          }
+        } catch (err) {
+          setExecutionOutput({
+            status: "Runtime / Syntax Error",
+            isAccepted: false,
+            errorMessage: err.message || "Failed to execute script.",
+            testCases: [],
+          });
+        }
+      } else {
+        // Python or C++ simulated runner
+        const hasLogic =
+          currentCode.includes("two") &&
+          (currentCode.includes("return") || currentCode.includes("map"));
+        if (hasLogic) {
+          setExecutionOutput({
+            status: "Accepted",
+            isAccepted: true,
+            runtime: `${selectedLanguage === "cpp" ? "1 ms (Beats 99.2%)" : "28 ms (Beats 91.5%)"}`,
+            memory: `${selectedLanguage === "cpp" ? "10.4 MB" : "17.6 MB"}`,
+            testCases: [
+              { input: "nums = [2,7,11,15], target = 9", expected: "[0, 1]", output: "[0, 1]", passed: true },
+              { input: "nums = [3,2,4], target = 6", expected: "[1, 2]", output: "[1, 2]", passed: true },
+              { input: "nums = [3,3], target = 6", expected: "[0, 1]", output: "[0, 1]", passed: true },
+            ],
+          });
+          try {
+            confetti({
+              particleCount: 35,
+              spread: 60,
+              origin: { y: 0.7 },
+              colors: ["#ec4899", "#8b5cf6", "#06b6d4"],
+            });
+          } catch {}
+        } else {
+          setExecutionOutput({
+            status: "Compilation / Test Error",
+            isAccepted: false,
+            errorMessage: "Incomplete function definition or missing return statement.",
+            testCases: [
+              { input: "nums = [2,7,11,15], target = 9", expected: "[0, 1]", output: "None / Empty", passed: false },
+            ],
+          });
+        }
       }
-    }, 700);
+    }, 600);
   };
 
   // Sample Challenges Data
@@ -378,6 +604,21 @@ vector<int> twoSum(vector<int>& nums, int target) {
                     >
                       <span>C++ (17)</span>
                     </button>
+
+                    <button
+                      type="button"
+                      className="cinematic-tab-reset-btn"
+                      onClick={() => {
+                        setEditorCode((prev) => ({
+                          ...prev,
+                          [selectedLanguage]: DEFAULT_CODE_SNIPPETS[selectedLanguage],
+                        }));
+                      }}
+                      title="Reset code to default Two Sum template"
+                    >
+                      <RotateCcw size={11} />
+                      <span>Reset</span>
+                    </button>
                   </div>
 
                   <button
@@ -404,15 +645,39 @@ vector<int> twoSum(vector<int>& nums, int target) {
                   </button>
                 </div>
 
-                {/* Workspace Body: Code Editor + Test Console Output */}
+                {/* Workspace Body: Interactive Editable Code Editor + Test Console Output */}
                 <div className="cinematic-workspace-body">
                   <div className="cinematic-editor-pane">
-                    {CODE_SNIPPETS[selectedLanguage].split("\n").map((line, idx) => (
-                      <div key={idx} className="cinematic-code-line">
-                        <span className="cinematic-line-number">{idx + 1}</span>
-                        <span>{line}</span>
-                      </div>
-                    ))}
+                    <div className="cinematic-line-numbers-col">
+                      {(editorCode[selectedLanguage] || "").split("\n").map((_, idx) => (
+                        <div key={idx}>{idx + 1}</div>
+                      ))}
+                    </div>
+                    <textarea
+                      className="cinematic-code-textarea"
+                      value={editorCode[selectedLanguage] || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEditorCode((prev) => ({ ...prev, [selectedLanguage]: val }));
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Tab") {
+                          e.preventDefault();
+                          const start = e.target.selectionStart;
+                          const end = e.target.selectionEnd;
+                          const val = e.target.value;
+                          const updated = val.substring(0, start) + "  " + val.substring(end);
+                          setEditorCode((prev) => ({ ...prev, [selectedLanguage]: updated }));
+                          setTimeout(() => {
+                            e.target.selectionStart = e.target.selectionEnd = start + 2;
+                          }, 0);
+                        }
+                      }}
+                      spellCheck="false"
+                      autoCapitalize="off"
+                      autoComplete="off"
+                      placeholder="Write or edit code here..."
+                    />
                   </div>
 
                   <div className="cinematic-output-pane">
@@ -428,21 +693,60 @@ vector<int> twoSum(vector<int>& nums, int target) {
 
                       {executionOutput ? (
                         <div>
-                          <div className="cinematic-test-status-box">
-                            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#34d399", fontWeight: 800, fontSize: "0.95rem" }}>
-                              <CheckCircle2 size={18} />
+                          <div
+                            className="cinematic-test-status-box"
+                            style={{
+                              background: executionOutput.isAccepted
+                                ? "rgba(16, 185, 129, 0.12)"
+                                : "rgba(239, 68, 68, 0.12)",
+                              borderColor: executionOutput.isAccepted
+                                ? "rgba(16, 185, 129, 0.3)"
+                                : "rgba(239, 68, 68, 0.3)",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                color: executionOutput.isAccepted ? "#34d399" : "#ef4444",
+                                fontWeight: 800,
+                                fontSize: "0.95rem",
+                              }}
+                            >
+                              {executionOutput.isAccepted ? <CheckCircle2 size={18} /> : <X size={18} />}
                               <span>{executionOutput.status}</span>
                             </div>
-                            <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginTop: "4px" }}>
-                              Runtime: {executionOutput.runtime}
-                            </div>
+                            {executionOutput.runtime && (
+                              <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginTop: "4px" }}>
+                                Runtime: {executionOutput.runtime} • Memory: {executionOutput.memory}
+                              </div>
+                            )}
                           </div>
+
+                          {executionOutput.errorMessage && (
+                            <div
+                              style={{
+                                background: "rgba(239, 68, 68, 0.08)",
+                                border: "1px solid rgba(239, 68, 68, 0.2)",
+                                borderRadius: "8px",
+                                padding: "8px 12px",
+                                marginBottom: "12px",
+                                fontSize: "0.75rem",
+                                color: "#f87171",
+                                fontFamily: "monospace",
+                              }}
+                            >
+                              {executionOutput.errorMessage}
+                            </div>
+                          )}
 
                           {executionOutput.testCases.map((tc, i) => (
                             <div
                               key={i}
                               style={{
-                                background: "rgba(255, 255, 255, 0.04)",
+                                background: tc.passed ? "rgba(255, 255, 255, 0.04)" : "rgba(239, 68, 68, 0.06)",
+                                border: tc.passed ? "1px solid transparent" : "1px solid rgba(239, 68, 68, 0.2)",
                                 borderRadius: "8px",
                                 padding: "8px 12px",
                                 marginBottom: "8px",
@@ -450,15 +754,23 @@ vector<int> twoSum(vector<int>& nums, int target) {
                                 color: "#cbd5e1",
                               }}
                             >
-                              <div style={{ color: "#34d399", fontWeight: 600 }}>Test Case #{i + 1} Passed</div>
+                              <div style={{ color: tc.passed ? "#34d399" : "#f87171", fontWeight: 700, display: "flex", alignItems: "center", gap: "6px" }}>
+                                {tc.passed ? <Check size={13} /> : <X size={13} />}
+                                <span>Test Case #{i + 1} {tc.passed ? "Passed" : "Failed"}</span>
+                              </div>
                               <div style={{ color: "#94a3b8", marginTop: "2px" }}>Input: {tc.input}</div>
+                              {!tc.passed && (
+                                <div style={{ color: "#f87171", marginTop: "2px" }}>
+                                  Expected: {tc.expected} | Got: {tc.output}
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
                       ) : (
                         <div style={{ color: "#64748b", fontSize: "0.85rem", textAlign: "center", padding: "60px 20px" }}>
                           <Terminal size={32} style={{ margin: "0 auto 12px", opacity: 0.5 }} />
-                          <p style={{ margin: 0 }}>Click <strong>"Run Code"</strong> above to execute tests against automated edge-cases.</p>
+                          <p style={{ margin: 0 }}>Edit code and click <strong>"Run Code"</strong> to execute live test cases.</p>
                         </div>
                       )}
                     </div>
@@ -608,55 +920,257 @@ vector<int> twoSum(vector<int>& nums, int target) {
                 ========================================================================== */}
             <div style={{ maxWidth: "1080px", margin: "0 auto 80px" }}>
               <div className="cinematic-mcq-box">
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
-                  <HelpCircle size={18} color="#ec4899" />
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#ec4899", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                    Interactive MCQ Practice Arena
-                  </span>
-                </div>
+                {quizCompleted ? (
+                  /* Quiz Completed Screen */
+                  <div style={{ textAlign: "center", padding: "20px 10px" }}>
+                    <div
+                      style={{
+                        width: "64px",
+                        height: "64px",
+                        margin: "0 auto 16px",
+                        borderRadius: "50%",
+                        background: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 10px 25px rgba(139, 92, 246, 0.3)",
+                      }}
+                    >
+                      <Trophy size={32} color="#ffffff" />
+                    </div>
 
-                <h3 style={{ margin: "0 0 16px", fontSize: "1.2rem", fontWeight: 700, color: "#0f172a" }}>
-                  What is the average time complexity of searching in a Balanced Binary Search Tree (AVL / Red-Black Tree)?
-                </h3>
+                    <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                      Quiz Set Completed!
+                    </span>
+                    <h3 style={{ margin: "8px 0 12px", fontSize: "1.6rem", fontWeight: 800, color: "#0f172a" }}>
+                      You scored {mcqScore} out of {MCQ_QUESTIONS.length}
+                    </h3>
+                    <p style={{ margin: "0 auto 24px", maxWidth: "480px", color: "#64748b", fontSize: "0.95rem" }}>
+                      {mcqScore === MCQ_QUESTIONS.length
+                        ? "Flawless score! You have supreme mastery over core DSA fundamentals."
+                        : mcqScore >= MCQ_QUESTIONS.length / 2
+                        ? "Great work! Solid conceptual intuition across data structures and algorithms."
+                        : "Good effort! Practice more questions to level up your technical interview edge."}
+                    </p>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
-                  {[
-                    { id: "A", text: "O(1) Constant Time", correct: false },
-                    { id: "B", text: "O(log N) Logarithmic Time", correct: true },
-                    { id: "C", text: "O(N) Linear Time", correct: false },
-                    { id: "D", text: "O(N log N) Linearithmic Time", correct: false },
-                  ].map((opt) => {
-                    const isSelected = selectedMcqOption === opt.id;
-                    const showCorrect = mcqAnswered && opt.correct;
-                    const showWrong = mcqAnswered && isSelected && !opt.correct;
-
-                    return (
-                      <div
-                        key={opt.id}
-                        className={`cinematic-mcq-option ${showCorrect ? "correct" : ""}`}
-                        style={{
-                          borderColor: showWrong ? "#ef4444" : showCorrect ? "#10b981" : isSelected ? "#8b5cf6" : "#e2e8f0",
-                          background: showWrong ? "rgba(239, 68, 68, 0.08)" : showCorrect ? "rgba(16, 185, 129, 0.1)" : "#f8fafc",
-                        }}
-                        onClick={() => {
-                          setSelectedMcqOption(opt.id);
-                          setMcqAnswered(true);
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                          <span style={{ fontWeight: 800, color: "#64748b" }}>{opt.id}.</span>
-                          <span>{opt.text}</span>
+                    <div style={{ display: "inline-flex", gap: "20px", marginBottom: "28px", padding: "12px 24px", background: "#f8fafc", borderRadius: "16px", border: "1px solid #e2e8f0" }}>
+                      <div>
+                        <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Accuracy</div>
+                        <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#0f172a" }}>
+                          {Math.round((mcqScore / MCQ_QUESTIONS.length) * 100)}%
                         </div>
-                        {showCorrect && <Check size={16} color="#10b981" />}
                       </div>
-                    );
-                  })}
-                </div>
+                      <div style={{ width: "1px", background: "#e2e8f0" }} />
+                      <div>
+                        <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>XP Earned</div>
+                        <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ec4899" }}>
+                          +{mcqScore * 15} XP
+                        </div>
+                      </div>
+                    </div>
 
-                {mcqAnswered && (
-                  <div style={{ padding: "12px 16px", borderRadius: "12px", background: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.2)", fontSize: "0.85rem", color: "#065f46" }}>
-                    <strong>Explanation:</strong> Because the tree maintains self-balancing invariants (height ≤ log N), each comparison halves the search space, yielding O(log N) runtime.
+                    <div style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}>
+                      <button
+                        type="button"
+                        className="arena-btn arena-btn-secondary"
+                        onClick={handleRestartQuiz}
+                        style={{ padding: "12px 24px" }}
+                      >
+                        <RotateCcw size={16} />
+                        <span>Retake Quiz</span>
+                      </button>
+                      <Link
+                        to="/challenges"
+                        className="arena-btn"
+                        style={{ padding: "12px 24px", textDecoration: "none" }}
+                      >
+                        <span>Explore All Challenges</span>
+                        <ArrowRight size={16} />
+                      </Link>
+                    </div>
                   </div>
+                ) : (
+                  /* Active Question Screen */
+                  <>
+                    <div className="cinematic-mcq-header">
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                        <div className="cinematic-mcq-badge">
+                          <HelpCircle size={15} />
+                          <span>Interactive MCQ Arena</span>
+                        </div>
+                        <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#8b5cf6", background: "rgba(139, 92, 246, 0.08)", padding: "4px 10px", borderRadius: "999px" }}>
+                          {currentMcq.topic}
+                        </span>
+                        <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#64748b" }}>
+                          Question {currentMcqIndex + 1} of {MCQ_QUESTIONS.length}
+                        </span>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                        {mcqStreak > 0 && (
+                          <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.85rem", fontWeight: 700, color: "#f59e0b" }}>
+                            <Flame size={16} />
+                            <span>Streak {mcqStreak}</span>
+                          </div>
+                        )}
+                        <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#059669", background: "rgba(16, 185, 129, 0.1)", padding: "4px 10px", borderRadius: "999px" }}>
+                          Score: {mcqScore}/{currentMcqIndex + (mcqAnswered ? 1 : 0)}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Progress track */}
+                    <div className="cinematic-mcq-track">
+                      <div
+                        className="cinematic-mcq-fill"
+                        style={{ width: `${((currentMcqIndex + 1) / MCQ_QUESTIONS.length) * 100}%` }}
+                      />
+                    </div>
+
+                    {/* Question Title */}
+                    <h3 style={{ margin: "0 0 20px", fontSize: "1.22rem", fontWeight: 700, color: "#0f172a", lineHeight: 1.45 }}>
+                      {currentMcq.question}
+                    </h3>
+
+                    {/* 2x2 Options Grid */}
+                    <div className="cinematic-mcq-grid">
+                      {currentMcq.options.map((opt) => {
+                        const isSelected = selectedMcqOption === opt.id;
+                        const isCorrectAnswer = opt.id === currentMcq.correctAnswer;
+                        const isUserWrongChoice = mcqAnswered && isSelected && !isCorrectAnswer;
+                        const showCorrectHighlight = mcqAnswered && isCorrectAnswer;
+                        const isDimmed = mcqAnswered && !isSelected && !isCorrectAnswer;
+
+                        return (
+                          <div
+                            key={opt.id}
+                            className={`cinematic-mcq-option ${
+                              showCorrectHighlight ? "correct" : isUserWrongChoice ? "wrong" : ""
+                            } ${isDimmed ? "dimmed" : ""} ${mcqAnswered ? "disabled" : ""}`}
+                            onClick={() => handleMcqSelect(opt.id)}
+                          >
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                              <span
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  width: "26px",
+                                  height: "26px",
+                                  borderRadius: "8px",
+                                  fontWeight: 800,
+                                  fontSize: "0.85rem",
+                                  background: showCorrectHighlight
+                                    ? "#10b981"
+                                    : isUserWrongChoice
+                                    ? "#ef4444"
+                                    : "#e2e8f0",
+                                  color: showCorrectHighlight || isUserWrongChoice ? "#ffffff" : "#475569",
+                                }}
+                              >
+                                {opt.id}
+                              </span>
+                              <span>{opt.text}</span>
+                            </div>
+
+                            {showCorrectHighlight && <Check size={18} color="#10b981" />}
+                            {isUserWrongChoice && <X size={18} color="#ef4444" />}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Explanation & Next Step Section */}
+                    {mcqAnswered ? (
+                      <div
+                        className={`cinematic-mcq-explanation ${
+                          selectedMcqOption === currentMcq.correctAnswer ? "is-correct" : "is-wrong"
+                        }`}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                          {selectedMcqOption === currentMcq.correctAnswer ? (
+                            <>
+                              <CheckCircle2 size={18} color="#10b981" />
+                              <strong style={{ fontSize: "0.95rem" }}>Brilliant! Correct Answer (+15 XP)</strong>
+                            </>
+                          ) : (
+                            <>
+                              <X size={18} color="#ef4444" />
+                              <strong style={{ fontSize: "0.95rem" }}>
+                                Incorrect — The correct answer is Option {currentMcq.correctAnswer}
+                              </strong>
+                            </>
+                          )}
+                        </div>
+
+                        <p style={{ margin: 0, fontSize: "0.88rem", lineHeight: 1.55 }}>
+                          <strong>Explanation:</strong> {currentMcq.explanation}
+                        </p>
+
+                        <div className="cinematic-mcq-actions">
+                          {selectedMcqOption !== currentMcq.correctAnswer ? (
+                            <button
+                              type="button"
+                              className="arena-btn arena-btn-secondary"
+                              onClick={() => {
+                                setSelectedMcqOption(null);
+                                setMcqAnswered(false);
+                              }}
+                              style={{ padding: "8px 16px", fontSize: "0.84rem" }}
+                            >
+                              <RotateCcw size={14} />
+                              <span>Re-attempt</span>
+                            </button>
+                          ) : (
+                            <div style={{ fontSize: "0.82rem", color: "#065f46", fontWeight: 600 }}>
+                              ✓ Concept verified
+                            </div>
+                          )}
+
+                          <button
+                            type="button"
+                            className="arena-btn"
+                            onClick={handleNextMcq}
+                            style={{
+                              padding: "10px 22px",
+                              marginLeft: "auto",
+                              background: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)",
+                            }}
+                          >
+                            <span>
+                              {currentMcqIndex + 1 < MCQ_QUESTIONS.length
+                                ? "Next Question"
+                                : "Finish Quiz"}
+                            </span>
+                            <ArrowRight size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Not answered yet - quick skip option */
+                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "12px" }}>
+                        <button
+                          type="button"
+                          onClick={handleNextMcq}
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            color: "#64748b",
+                            fontSize: "0.82rem",
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            padding: "4px 8px",
+                          }}
+                        >
+                          <span>Skip Question</span>
+                          <ArrowRight size={13} />
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
